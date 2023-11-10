@@ -1,0 +1,41 @@
+﻿  Customer.cpp
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\Customer.cpp(7,27): error C3861: 'query': identifier not found
+  User.cpp
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\User.cpp(75,18): error C3861: 'query': identifier not found
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\User.cpp(77,34): error C3861: 'query': identifier not found
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\User.cpp(154,25): error C3861: 'query': identifier not found
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\User.cpp(157,31): error C2440: '<function-style-cast>': cannot convert from 'int' to 'Employee'
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\User.cpp(157,31): message : 'Employee::Employee': no overloaded function could convert all the argument types
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\Employee.h(19,1): message : could be 'Employee::Employee(Employee &&)'
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\User.cpp(157,31): message : 'Employee::Employee(Employee &&)': cannot convert argument 1 from 'int' to 'Employee &&'
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\User.cpp(157,32): message : Reason: cannot convert from 'int' to 'Employee'
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\Employee.h(19,1): message : or       'Employee::Employee(const Employee &)'
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\User.cpp(157,31): message : 'Employee::Employee(const Employee &)': cannot convert argument 1 from 'int' to 'const Employee &'
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\User.cpp(157,32): message : Reason: cannot convert from 'int' to 'const Employee'
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\User.cpp(157,31): message : while trying to match the argument list '(int)'
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\User.cpp(161,30): error C2440: '<function-style-cast>': cannot convert from 'int' to 'Manager'
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\User.cpp(161,30): message : 'Manager::Manager': no overloaded function could convert all the argument types
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\Manager.h(24,1): message : could be 'Manager::Manager(Manager &&)'
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\User.cpp(161,30): message : 'Manager::Manager(Manager &&)': cannot convert argument 1 from 'int' to 'Manager &&'
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\User.cpp(161,31): message : Reason: cannot convert from 'int' to 'Manager'
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\Manager.h(24,1): message : or       'Manager::Manager(const Manager &)'
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\User.cpp(161,30): message : 'Manager::Manager(const Manager &)': cannot convert argument 1 from 'int' to 'const Manager &'
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\User.cpp(161,31): message : Reason: cannot convert from 'int' to 'const Manager'
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\User.cpp(161,30): message : while trying to match the argument list '(int)'
+  Util.cpp
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\Util.cpp(35,26): warning C4267: 'argument': conversion from 'size_t' to 'const _Elem', possible loss of data
+          with
+          [
+              _Elem=char
+          ]
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\Util.cpp(36,27): warning C4267: 'argument': conversion from 'size_t' to '_Elem', possible loss of data
+          with
+          [
+              _Elem=char
+          ]
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\Util.cpp(37,26): warning C4267: 'argument': conversion from 'size_t' to 'const _Elem', possible loss of data
+          with
+          [
+              _Elem=char
+          ]
+  Generating Code...
