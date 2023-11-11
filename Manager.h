@@ -17,7 +17,7 @@ public:
     //lists all employees with name and ID
     void viewAllEmployees();
 
-    void updateEmployeeRate(int employeeID, int newRate);
+    void updateEmployeeRate();
 
     void createItem();
 
