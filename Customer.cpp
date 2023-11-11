@@ -54,7 +54,23 @@ void Customer::mainMenu() {
 }
 
 void Customer::checkOrderHistory() {
-    cout << "-----------------------------\n";
-    cout << "Order number   |  Total Price\n";
-
+    
+    //select orderNumber, totalCost from orderHistory where userID = this->userID;
 }
+
+void Customer::searchForProducts() {
+
+    string input;
+    bool searching = true;
+
+    while (searching) {
+        cout << "Please enter the name of the product you're looking for. Type 'Done' to stop searching.\n";
+        cin >> input;
+
+        if (input.compare("Done") == 0 || input.compare("done") == 0)
+            return;
+
+
+    }
+}
+

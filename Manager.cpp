@@ -44,6 +44,8 @@ void Manager::mainMenu() {
 				break;
 		}
 	}
+
+	return;
 }
 
 void Manager::addEmployee() {
@@ -153,6 +155,8 @@ void Manager::addEmployee() {
 	cout << "Employee information added to ID successfully\n";
 	cout << "Employee added successfully\n";
 	cout << "-------------------------------------------\n";
+
+	return;
 }
 
 void Manager::fireEmployee() {
@@ -182,11 +186,170 @@ void Manager::fireEmployee() {
 	if (input.compare("y") == 0) {
 		//delete from login where userID = userID
 		cout << "Employee is deleted\n";
+		cout << "--------------------------------\n";
 	}
 
 	else {
 		cout << "Did not delete employee from database\n";
+		cout << "------------------------------------------\n";
 	}
+
+	return;
+}
+
+void Manager::createItem() {
+
+	string input;
+	string productName;
+	double productPrice;
+	int startingQuantity;
+	bool enteredCorrectly = false;
+
+	cout << "Please enter the name of the product you want to add. Type 'quit' anytime to quit\n";
+	cin >> input;
+
+	while (!enteredCorrectly) {
+
+		if (input.compare("quit") == 0)
+			return;
+
+		cout << "You entered: '" + input + "'. Is that what you want to keep it as? y/n\n";
+		cin >> input;
+
+		if (input.compare("y") == 0)
+			enteredCorrectly = true;
+
+		else if (!isClean(input)) {
+			cout << "Not a valid product name, please try again\n";
+			cin >> input;
+		}
+
+		else {
+			cout << "Please enter the name of the product you want to add.\n";
+			cin >> input;
+		}
+	}
+
+	enteredCorrectly = false;
+
+	cout << "What is the price of the item?\n";
+	cin >> input;
+
+	while (!enteredCorrectly) {
+
+		if (input.compare("quit") == 0)
+			return;
+
+		if (std::stod(input) > 0) {
+			enteredCorrectly = true;
+			productPrice = std::stod(input);
+		}
+
+		else {
+			cout << "Please enter a valid price.\n";
+			cin >> input;
+		}
+	}
+
+	enteredCorrectly = false;
+
+	cout << "How many of these items do you want to stock initially?\n";
+	cin >> input;
+
+	while (!enteredCorrectly) {
+
+		if (input.compare("quit") == 0)
+			return;
+
+		if (std::stoi(input) > -1) {
+			enteredCorrectly = true;
+			startingQuantity = std::stoi(input);
+		}
+		
+		else {
+			cout << "Please enter a valid number.\n";
+			cin >> input;
+		}
+	}
+
+	//insert into product values (productName, productPrice, productQuantity)
+	cout << "Product successfully added";
+	cout << "------------------------------\n";
+
+	return;
+}
+
+void Manager::updateEmployeeRate() {
+
+	double newRate;
+	string input;
+	int employeeID;
+	bool enteredCorrectly = false;
+
+	cout << "Please enter the Employee ID of the employee you would like to changet the rate of. Enter 'quit' to quit.\n";
+	cin >> input;
+
+	while (!enteredCorrectly) {
+
+		if (input.compare("quit") == 0)
+			return;
+
+		if (isValidID(std::stoi(input))) {
+			enteredCorrectly = true;
+			employeeID = std::stoi(input);
+		}
+
+		else {
+			cout << "Please enter valid employee ID\n";
+			cin >> input;
+		}
+	}
+
+	enteredCorrectly = false;
+
+	cout << "Please enter the new rate of the employee.\n";
+	cin >> input;
+
+	while (!enteredCorrectly) {
+
+		if (input.compare("quit") == 0)
+			return;
+
+		if (std::stod(input) > 0) {
+			enteredCorrectly = true;
+			newRate = std::stod(input);
+		}
+		
+		else {
+			cout << "Please enter valid rate.\n";
+			cin >> input;
+		}
+	}
+
+	//update employee set hourlyRate = newRate where userID = userID
+	cout << "Rate has been updated to " + std::to_string(newRate) + ".";
+	cout << "------------------------------------\n";
+
+	return;
+}
+
+void Manager::viewAllEmployees() {
+	//select userID, firstName, lastName from employeeContact
+	return;
+}
+
+void Manager::viewBusinessRevenue() {
+	
+	int totalRevenue = 0;
+	//totalRevenue = select sum(orderTotal) from orderHistory
+	int totalCost = 0;
+	//totalCost = sum (earnings) from employeeHours
+
+	int netProfit = totalRevenue - totalCost;
+
+	cout << "Total Revenue: " + std::to_string(totalRevenue) + "\n";
+	cout << "Total Cost: " + std::to_string(totalCost) + "\n";
+	cout << "Total Net Profit: " + std::to_string(netProfit) + "\n";
 
 	return;
 }
