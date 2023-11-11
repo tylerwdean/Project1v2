@@ -90,5 +90,25 @@ string generateRandomString(int length) {
 }
 
 bool isTaken(string userName) {
+
+    //select count(*) from login where userName = userName
+    // 
+    // if (count == 1)
+    //      return truel
+    // else
+    //      return false; 
+    
     return false;
+}
+
+bool isValidID(int userID) {
+
+    //select count(*) from login where userID = userID
+    // 
+    // if (count == 1)
+    //      return truel
+    // else
+    //      return false; 
+    return true;
+
 }

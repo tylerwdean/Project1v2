@@ -80,7 +80,7 @@ void Manager::addEmployee() {
 		cin >> input;
 	}
 
-	hourlyRate = input;
+	hourlyRate = std::stod(input);
 
 	cout << "Please enter new employee's Social Security Number\n";
 	cin >> input;
@@ -146,7 +146,47 @@ void Manager::addEmployee() {
 	string hashedPassword = hashString(newPassword, salter);
 
 	//insert into login values (newUsername, salter, hashedPassword)
-	cout << "Employee added to database successfully\n";
+	cout << "Employee login added to database successfully\n";
 	//int employeeUserID = (select userID from login where username = newusername)
-	//insert into employee values (employeeUserID, hourlyRate, 
+	//insert into employee values (employeeUserID, hourlyRate, 0, 0)
+	//insert into employeeContact values (employeeUserID, employeeSS, employeePhoneNumber, employeeFirstName, employeeLastName)
+	cout << "Employee information added to ID successfully\n";
+	cout << "Employee added successfully\n";
+	cout << "-------------------------------------------\n";
+}
+
+void Manager::fireEmployee() {
+
+	string input;
+
+	cout << "Please enter the Employee ID of the person you want to remove\n";
+	cin >> input;
+
+	if (input.compare("quit") == 0) {
+		return;
+	}
+
+	while (!isValidID(std::stoi(input))) {
+		cout << "That is not a valid ID. Please enter a different one or type 'quit' to quit\n";
+		cin >> input;
+
+		if (input.compare("quit") == 0) {
+			return;
+		}
+	}
+
+	//select firstName, lastName from employeeContact where userID = userID
+	cout << "Are you sure you want to fire _____, y/n \n";	//add the employee name
+	cin >> input;
+
+	if (input.compare("y") == 0) {
+		//delete from login where userID = userID
+		cout << "Employee is deleted\n";
+	}
+
+	else {
+		cout << "Did not delete employee from database\n";
+	}
+
+	return;
 }

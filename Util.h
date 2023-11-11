@@ -22,3 +22,5 @@ string generateRandomString(int length);
 
 //this function checks to ensure the username is valid
 bool isTaken(string username);
+
+bool isValidID(int userID);
