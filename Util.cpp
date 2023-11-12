@@ -93,8 +93,8 @@ bool isTaken(string userName) {
 
     //select count(*) from login where userName = userName
     // 
-    // if (count == 1)
-    //      return truel
+    // if (count > 0)
+    //      return true;
     // else
     //      return false; 
     
@@ -106,7 +106,7 @@ bool isValidID(int userID) {
     //select count(*) from login where userID = userID
     // 
     // if (count == 1)
-    //      return truel
+    //      return true;
     // else
     //      return false; 
     return true;

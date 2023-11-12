@@ -11,9 +11,10 @@ public:
     Employee(int userID);
 
     void mainMenu();
-    void restockItem(int productID, int quantity);
-    void viewHoursWorked();
+    void restockItem();
+    void viewEarnings();
     void addHoursWorked();
-    void viewRate();
     void updateInformation();
+    void deleteOrder();
+    void generateDiscountCode();
 };
