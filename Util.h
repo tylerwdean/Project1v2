@@ -1,11 +1,12 @@
 #pragma once
 #include <string>
 #include <iostream>  
+#include <queue>
 
 using namespace std;
 
 //this function takes a string and return the resulting item, only good for single item queries
-string query(string inputQuery);
+queue<string> query(int numOfItems, string queryInput);
 
 //this function sanitizes a string that the user inputs to ensure it doesn't interfere with any SQL queries
 bool isClean(string dirtyString);
@@ -24,3 +25,7 @@ string generateRandomString(int length);
 bool isTaken(string username);
 
 bool isValidID(int userID);
+
+bool isValidProductCode(int productCode);
+
+bool isValidOrder(int orderID);

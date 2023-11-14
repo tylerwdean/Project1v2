@@ -1,6 +1,7 @@
 #include "Employee.h"
 #include <iostream>
 #include <string>
+#include "Util.h"
 
 using namespace std;
 
@@ -46,3 +47,106 @@ void Employee::mainMenu() {
 		break;
 	}
 }
+
+void Employee::restockItem() {
+	
+	string input;
+	int productCode;
+	int quantityRestocked;
+	bool enteredCorrectly = false;
+
+	cout << "Please enter the product code for the item you're restocking. Type 'quit' to quit\n";
+	cin >> input;
+
+
+
+	while (!enteredCorrectly) {
+
+		if (input.compare("quit") == 0) {
+			return;
+		}
+
+		if (isValid(input) || isValidProductCode(stoi(input)))
+			enteredCorrectly = true;
+
+		else {
+			cout << "Please enter a valid product code.\n";
+			cin >> input;
+		}
+	}
+
+	productCode = stoi(input);
+	enteredCorrectly = false;
+
+	cout << "Please enter the amount of inventory being restocked.\n.";
+	cin >> input;
+
+	while (stoi(input) < 0) {
+		
+		if (input.compare("quit") == 0)
+			return;
+
+		if (stoi(input) > -1) 
+			enteredCorrectly = true;
+		
+		else {
+			cout << "Please enter a valid value";
+			cin >> input;
+		}
+	}
+
+	quantityRestocked = stoi(input);
+	enteredCorrectly = false;
+
+	//update inventory set quantityStocked = quantityStocked + quantityRestocked where productID = productID
+	cout << "Successfully restocked\n";
+	cout << "----------------------------------------\n";
+	return;
+}
+
+void Employee::deleteOrder() {
+
+	string input;
+	bool enteredCorrectly = false;
+	int orderNumber;
+
+	cout << "Please enter the order number you want to delete or type 'quit' to quit\n";
+	cin >> input;
+
+	while (!enteredCorrectly) {
+		if (input.compare("quit") == 0)
+			return;
+		if (isValidOrder(stoi(input)))
+			enteredCorrectly = true;
+		else {
+			cout << "Please enter a valid order ID\n";
+			cin >> input;
+		}
+	}
+
+	orderNumber = stoi(input);
+	enteredCorrectly = false;
+
+	cout << "Are you sure you want to delete order number " + to_string(orderNumber) + "? y/n\n";
+	cin >> input;
+
+	if (input.compare("y") == 0) {
+		//delete from orders where orderID = orderNumber
+	}
+
+	return;
+}
+
+void Employee::generateDiscountCode() {
+	
+	string input;
+	string code = generateRandomString(8);
+	
+	cout << "Your discount code is: '" + code + "'";
+	cout << "This is good for 15% off.\n";
+
+	//insert into discountCode values (code, 15)
+	cout << "---------------------------\n";
+	return;
+}
+

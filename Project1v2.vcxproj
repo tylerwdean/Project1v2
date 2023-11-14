@@ -131,7 +131,6 @@
     <ClCompile Include="Employee.cpp" />
     <ClCompile Include="Manager.cpp" />
     <ClCompile Include="Project1v2.cpp" />
-    <ClCompile Include="Test1.cpp" />
     <ClCompile Include="User.cpp" />
     <ClCompile Include="Util.cpp" />
   </ItemGroup>
