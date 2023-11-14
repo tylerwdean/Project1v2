@@ -82,6 +82,16 @@ bool isValid(string s) {
 
 }
 
+bool isValidProductCode(int productCode) {
+
+    string query0 = "select productCode from inventory where productCode = " + to_string(productCode);
+
+    queue<string> result = query(1, query0);
+
+    return result.size() == 1;
+
+}
+
 string generateRandomString(int length) {
 
     string result;
@@ -97,30 +107,29 @@ string generateRandomString(int length) {
 
 bool isTaken(string userName) {
 
-    //select count(*) from login where userName = userName
-    // 
-    // if (count > 0)
-    //      return true;
-    // else
-    //      return false; 
-    
-    return false;
+    if (!isClean(userName))
+        return true;    //can't use an unclean name
+
+    string query0 = "select userName from login where userName = '" + userName + "'";
+    queue<string> result = query(1, query0);
+
+    return result.size() > 0;
 }
 
 bool isValidID(int userID) {
 
-    //select count(*) from login where userID = userID
-    // 
-    // if (count == 1)
-    //      return true;
-    // else
-    //      return false; 
-    return true;
+    string query0 = "select userID from login where userID = " + to_string(userID);
+    queue<string> result = query(1, query0);
 
+    return result.size() == 1;
 }
 
 bool isValidOrder(int orderID) {
-    return true;
+
+    string query0 = "select orderID from orders where orderID = " + to_string(orderID);
+    queue<string> result = query(1, query0);
+
+    return result.size() > 0;
 }
 
 void showSQLError(unsigned int handleType, const SQLHANDLE& handle)

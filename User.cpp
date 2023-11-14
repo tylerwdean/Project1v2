@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include <queue>
 #include "User.h"
 #include "Util.h"
 #include "Customer.h"
@@ -32,13 +33,13 @@ void User::mainMenu() {
 
         if (userChoice == 1) {
             verifyUser();
-            loggedIn();
+            logIn();
         }
 
         else if (userChoice == 2) {
             createUser(Role::customer);
             verifyUser();
-            loggedIn();
+            logIn();
         }
 
     }
@@ -49,7 +50,7 @@ void User::mainMenu() {
 }
 
 
-void User::verifyUser() {
+bool User::verifyUser() {
 
     string username;
     string password;
@@ -63,7 +64,7 @@ void User::verifyUser() {
         cin >> username;
 
         if (username.compare("quit") == 0)
-            return;
+            return false;
 
         cout << "Password: ";
         cin >> password;
@@ -72,28 +73,28 @@ void User::verifyUser() {
         if (!isValid(password) || !isTaken(username)) {
             cout << "Verification Failed, Please try again\n";
             cout << "------------------------------------\n";
-            verifyUser();
         }
 
 
-        salter = "ABCDEF";//query(1, "SELECT salter FROM login WHERE username = \'" + username + "\'").front();
+        salter = query(1, "SELECT salter FROM login WHERE username = '" + username + "'").front();
         hash = hashString(password, salter);
-        this->userID = 1;//std::stoi(query(1, "SELECT ID FROM login WHERE password = \'" + hash + "\'").front());
+        this->userID = std::stoi(query(1, "SELECT ID FROM login WHERE password = '" + hash + "'").front());
 
         //if the query was null then we aren't logged in and so it tries again
         if (this->userID == NULL) {
             cout << "Verification Failed, Please try again\n";
             cout << "------------------------------------\n";
-            verifyUser();
         }
 
         else {
             isVerified = true;
+            return true;
+            
         }
 
     }
 
-    cout << "------------------------------------\n";
+    return false;
 
 }
 
@@ -151,11 +152,10 @@ void User::createUser(Role userRole) {
     return;
 }
 
-void User::loggedIn() {
+void User::logIn() {
 
     User currentUser;
-    string roleString = "customer";
-    //query(1, "SELECT role FROM Role WHERE ID = " + userID);
+    string roleString = query(1, "SELECT role FROM roles WHERE ID = " + to_string(this->userID)).front();
 
     if (roleString.compare("employee") == 0) {
         //currentUser = Employee(userID);

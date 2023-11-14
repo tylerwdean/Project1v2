@@ -8,10 +8,22 @@ int main() {
     //Manager currentUser = Manager();
     //currentUser.mainMenu();
     
-    string queryInput = "select * from instructor";
+    /*string query0 = "drop table TylerTest";
+    string query1 = "create table TylerTest (firstName varchar(20), ID numeric(1,0) unique)";
+    string query2 = "insert into TylerTest values ('Tyler', 7)";
+    string query3 = "select firstName, ID from TylerTest";
     queue<string> result;
-    result = query(2, queryInput);
-    cout << result.front();
+    query(0, query1);
+    query(0, query2);
+    result = query(2, query3);
+    query(0, query0);
+    
+    for (int i = 1; !result.empty(); i++) {
+        cout << result.front() << ". ";
+        result.pop();
+        if (i % 2 == 0)
+            cout << endl;
+    }*/
 
     /*
     char queryInput[256] = "select * from instructor";

@@ -6,15 +6,26 @@ enum Role {customer, employee, manager};
 class User{
 
 public:
+
+    /*  This function hosts the main login menu
+    * 
+    *   Function ends when user wants to quit the application
+    */
     void mainMenu();
-    void loggedIn();
-    //void changePassword();
+
+    
+    
 
 protected:
     int userID = -1;
     std::string userFirstName;
     //Role userRole;
+    
+    //void changePassword();
 
-    void verifyUser();
+    /*  This function starts the login process
+    */
+    void logIn();
+    bool verifyUser();
     void createUser(Role userRole);
 };
