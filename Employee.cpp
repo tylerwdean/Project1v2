@@ -34,13 +34,13 @@ void Employee::mainMenu() {
 		break;
 	case 3: generateDiscountCode();
 		break;
-	case 4: addHoursWorked();
+	case 4: //addHoursWorked();
 		break;
-	case 5: viewEarnings();
+	case 5: //viewEarnings();
 		break;
-	case 6: changePassword();
+	case 6: //changePassword();
 		break;
-	case 7: updateInformation();
+	case 7: //updateInformation();
 		break;
 	case 8: return;
 	default:
@@ -66,7 +66,7 @@ void Employee::restockItem() {
 			return;
 		}
 
-		if (isValid(input) || isValidProductCode(stoi(input)))
+		if (isValid(input)) //|| isValidProductCode(stoi(input)))
 			enteredCorrectly = true;
 
 		else {

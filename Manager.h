@@ -7,7 +7,7 @@ using namespace std;
 class Manager : public Employee {
 public:
 
-    Manager(int userID);
+    //Manager(int userID);
 
     void mainMenu();
     //hires employee

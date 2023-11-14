@@ -72,9 +72,9 @@ void User::verifyUser() {
         }
 
 
-        salter = query("SELECT salter FROM login WHERE username = \'" + username + "\'");
+        salter = "ABCDEF";//query(1, "SELECT salter FROM login WHERE username = \'" + username + "\'").front();
         hash = hashString(password, salter);
-        this->userID = std::stoi(query("SELECT ID FROM login WHERE password = \'" + hash + "\'"));
+        this->userID = 1;//std::stoi(query(1, "SELECT ID FROM login WHERE password = \'" + hash + "\'").front());
 
         //if the query was null then we aren't logged in and so it tries again
         if (this->userID == NULL) {
@@ -151,18 +151,19 @@ void User::createUser(Role userRole) {
 void User::loggedIn() {
 
     User currentUser;
-    string roleString = query("SELECT role FROM Role WHERE ID = " + userID);
+    string roleString = "customer";
+    //query(1, "SELECT role FROM Role WHERE ID = " + userID);
 
     if (roleString.compare("employee") == 0) {
-        currentUser = Employee(userID);
+        //currentUser = Employee(userID);
     }
 
     else if (roleString.compare("manager") == 0) {
-        currentUser = Manager(userID);
+        //currentUser = Manager(userID);
     }
 
     else {
-        currentUser = Customer(userID);
+        //currentUser = Customer(userID);
     }
 
     currentUser.mainMenu();

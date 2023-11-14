@@ -6,15 +6,15 @@ int main() {
 
     //User currentUser = User();
     //currentUser.mainMenu();
+    
+    query(2, "select * from instructor");
+    string input = "Hi";
 
-    queue<string> result = query(2, "select * from instructor");
-    string input;
-
-    while (!result.empty()) {
-        input = result.front();
+   /* while (!result.empty()) {
+        //input = result.front();
         cout << input << endl;
-        result.pop();
-    }
+        //result.pop();
+    }*/
 
     return 0;
 }

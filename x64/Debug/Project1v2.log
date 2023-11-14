@@ -1,24 +1,4 @@
-﻿  Customer.cpp
-C:\Users\tyler\School Folder\Database\Project1v2\Customer.cpp(7,27): error C2660: 'query': function does not take 1 arguments
-C:\Users\tyler\School Folder\Database\Project1v2\Util.h(9,15): message : see declaration of 'query'
-C:\Users\tyler\School Folder\Database\Project1v2\Customer.cpp(7,27): message : while trying to match the argument list '(const char *)'
-  Employee.cpp
-  Manager.cpp
-C:\Users\tyler\School Folder\Database\Project1v2\Manager.cpp(85,24): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-  Project1v2.cpp
-  User.cpp
-C:\Users\tyler\School Folder\Database\Project1v2\User.cpp(75,18): error C2660: 'query': function does not take 1 arguments
-C:\Users\tyler\School Folder\Database\Project1v2\Util.h(9,15): message : see declaration of 'query'
-C:\Users\tyler\School Folder\Database\Project1v2\User.cpp(75,18): message : while trying to match the argument list '(std::basic_string<char,std::char_traits<char>,std::allocator<char>>)'
-C:\Users\tyler\School Folder\Database\Project1v2\User.cpp(77,34): error C2660: 'query': function does not take 1 arguments
-C:\Users\tyler\School Folder\Database\Project1v2\Util.h(9,15): message : see declaration of 'query'
-C:\Users\tyler\School Folder\Database\Project1v2\User.cpp(77,34): message : while trying to match the argument list '(std::basic_string<char,std::char_traits<char>,std::allocator<char>>)'
-C:\Users\tyler\School Folder\Database\Project1v2\User.cpp(154,25): error C2660: 'query': function does not take 1 arguments
-C:\Users\tyler\School Folder\Database\Project1v2\Util.h(9,15): message : see declaration of 'query'
-C:\Users\tyler\School Folder\Database\Project1v2\User.cpp(154,25): message : while trying to match the argument list '(const char *)'
-C:\Users\tyler\School Folder\Database\Project1v2\User.cpp(154,23): error C2440: 'initializing': cannot convert from 'std::queue<std::string,std::deque<std::string,std::allocator<std::string>>>' to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-C:\Users\tyler\School Folder\Database\Project1v2\User.cpp(154,23): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-  Util.cpp
+﻿  Util.cpp
 C:\Users\tyler\School Folder\Database\Project1v2\Util.cpp(41,26): warning C4267: 'argument': conversion from 'size_t' to 'const _Elem', possible loss of data
           with
           [
@@ -34,6 +14,4 @@ C:\Users\tyler\School Folder\Database\Project1v2\Util.cpp(43,26): warning C4267:
           [
               _Elem=char
           ]
-C:\Users\tyler\School Folder\Database\Project1v2\Util.cpp(145,9): error C2561: 'query': function must return a value
-C:\Users\tyler\School Folder\Database\Project1v2\Util.cpp(135,15): message : see declaration of 'query'
-  Generating Code...
+  Project1v2.vcxproj -> C:\Users\tyler\School Folder\Database\Project1v2\x64\Debug\Project1v2.exe

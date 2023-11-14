@@ -8,12 +8,12 @@ class User{
 public:
     void mainMenu();
     void loggedIn();
-    void changePassword();
+    //void changePassword();
 
 protected:
     int userID = -1;
     std::string userFirstName;
-    Role userRole;
+    //Role userRole;
 
     void verifyUser();
     void createUser(Role userRole);

@@ -52,7 +52,8 @@ void Manager::addEmployee() {
 
 	string input;
 	string employeeFirstName, employeeLastName, newUsername, newPassword;
-	int employeeSS, employeePhoneNumber, hourlyRate;
+	int employeeSS, employeePhoneNumber;
+	double hourlyRate;
 
 
 	cout << "----------------------------\n";

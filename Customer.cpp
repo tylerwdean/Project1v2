@@ -4,7 +4,7 @@
 
 Customer::Customer(int userID) {
     this->userID = userID;
-    this->userFirstName = query("SELECT firstName FROM customer WHERE ID = " + userID);
+    this->userFirstName = "Bob";//query(1, "SELECT firstName FROM customer WHERE ID = " + userID).front();
 }
 
 void Customer::mainMenu() {
@@ -33,13 +33,13 @@ void Customer::mainMenu() {
         switch (userChoice) {
         case 1: searchForProducts();
             break;
-        case 2: viewCart();
+        case 2: //viewCart();
             break;
-        case 3: checkPointsBalance();
+        case 3: //checkPointsBalance();
             break;
-        case 4: updateInformation();
+        case 4: //updateInformation();
             break;
-        case 5: changePassword();
+        case 5: //changePassword();
             break;
         case 6: checkOrderHistory();
             break;

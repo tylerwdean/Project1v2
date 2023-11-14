@@ -132,16 +132,17 @@ void showSQLError(unsigned int handleType, const SQLHANDLE& handle)
         cout << "SQL driver message: " << message << "\nSQL state: " << SQLState << "." << endl;
 }
 
-queue<string> query(int numOfItemsReturned, const char[]) {
+void query(int numOfItems, string inputQuery) {
     SQLHANDLE SQLEnvHandle = NULL;
     SQLHANDLE SQLConnectionHandle = NULL;
     SQLHANDLE SQLStatementHandle = NULL;
     SQLRETURN retCode = 0;
-    char SQLQuery[] = "Hello World";
+    const char* myStringChars = inputQuery.c_str();
+    char SQLQuery[] = { *myStringChars };
     queue<string> resultQueue;
 
     while (true) {
-        cout << SQLQuery << "\n";
+        cout << SQLQuery[1] << "\n";
         return;
     }
 
@@ -199,11 +200,11 @@ queue<string> query(int numOfItemsReturned, const char[]) {
         }
         else {
             char name[256];
-            char dept_name[256];
+            //char dept_name[256];
             while (SQLFetch(SQLStatementHandle) == SQL_SUCCESS) {
                 // Fetches the next rowset of data from the result
 
-                for (int i = 1; i <= numOfItemsReturned; i++) {
+                for (int i = 1; i <= numOfItems; i++) {
                     SQLGetData(SQLStatementHandle, i, SQL_C_DEFAULT, &name, sizeof(name), NULL);
                     resultQueue.push(name);
                 }
@@ -220,5 +221,5 @@ queue<string> query(int numOfItemsReturned, const char[]) {
     SQLFreeHandle(SQL_HANDLE_DBC, SQLConnectionHandle);
     SQLFreeHandle(SQL_HANDLE_ENV, SQLEnvHandle);
 
-    return resultQueue;
+    return;
 }
