@@ -13,7 +13,7 @@ public:
     void mainMenu();
     void restockItem();
     //void viewEarnings();
-    //void addHoursWorked();
+    void addHoursWorked();
     //void updateInformation();
     void deleteOrder();
     void generateDiscountCode();

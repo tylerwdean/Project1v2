@@ -1,20 +1,29 @@
 #include "User.h"
+#include "Manager.h"
 #include "Util.h"
 #include <queue>
 
 int main() {
 
-    //User currentUser = User();
+    //Manager currentUser = Manager();
     //currentUser.mainMenu();
     
-    query(2, "select * from instructor");
-    string input = "Hi";
+    string queryInput = "select * from instructor";
+    queue<string> result;
+    result = query(2, queryInput);
+    cout << result.front();
 
-   /* while (!result.empty()) {
-        //input = result.front();
-        cout << input << endl;
-        //result.pop();
-    }*/
+    /*
+    char queryInput[256] = "select * from instructor";
+    queue<string> resultQueue;
+    resultQueue = query(2, queryInput);
+
+    while (!resultQueue.empty()) {
+        cout << resultQueue.front();
+        resultQueue.pop();
+    }
+    */
+
 
     return 0;
 }

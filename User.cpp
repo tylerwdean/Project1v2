@@ -61,6 +61,10 @@ void User::verifyUser() {
 
         cout << "Username: ";
         cin >> username;
+
+        if (username.compare("quit") == 0)
+            return;
+
         cout << "Password: ";
         cin >> password;
 
@@ -89,7 +93,6 @@ void User::verifyUser() {
 
     }
 
-    //at this point we have a userID value and so we're good
     cout << "------------------------------------\n";
 
 }
@@ -167,6 +170,6 @@ void User::loggedIn() {
     }
 
     currentUser.mainMenu();
-    delete& currentUser;
+    delete &currentUser;
 
 }

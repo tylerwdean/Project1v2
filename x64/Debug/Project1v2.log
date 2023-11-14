@@ -1,4 +1,9 @@
-﻿  Util.cpp
+﻿  Customer.cpp
+  Employee.cpp
+  Manager.cpp
+  Project1v2.cpp
+  User.cpp
+  Util.cpp
 C:\Users\tyler\School Folder\Database\Project1v2\Util.cpp(41,26): warning C4267: 'argument': conversion from 'size_t' to 'const _Elem', possible loss of data
           with
           [
@@ -14,4 +19,5 @@ C:\Users\tyler\School Folder\Database\Project1v2\Util.cpp(43,26): warning C4267:
           [
               _Elem=char
           ]
+  Generating Code...
   Project1v2.vcxproj -> C:\Users\tyler\School Folder\Database\Project1v2\x64\Debug\Project1v2.exe

@@ -52,7 +52,8 @@ void Manager::addEmployee() {
 
 	string input;
 	string employeeFirstName, employeeLastName, newUsername, newPassword;
-	int employeeSS, employeePhoneNumber;
+	int employeeSS;
+	long long employeePhoneNumber;
 	double hourlyRate;
 
 
@@ -105,14 +106,14 @@ void Manager::addEmployee() {
 		employeeSS = std::stoi(input);
 	}
 
-	cout << "Please enter the employee's phone number, digits only";
+	cout << "Please enter the employee's phone number, digits only\n";
 	cin >> input;
 
 	if (input.compare("quit") == 0) {
 		return;
 	}
 
-	employeePhoneNumber = std::stoi(input);
+	employeePhoneNumber = std::stoll(input);
 
 	while (employeePhoneNumber < 1000000000 || employeePhoneNumber > 9999999999) {
 		cout << "Please enter valid phone number\n";
@@ -274,8 +275,8 @@ void Manager::createItem() {
 	}
 
 	//insert into product values (productName, productPrice, productQuantity)
-	cout << "Product successfully added";
-	cout << "------------------------------\n";
+	cout << "Product successfully added\n";
+	cout << "------------------------------\n\n";
 
 	return;
 }
@@ -328,7 +329,7 @@ void Manager::updateEmployeeRate() {
 	}
 
 	//update employee set hourlyRate = newRate where userID = userID
-	cout << "Rate has been updated to " + std::to_string(newRate) + ".";
+	cout << "Rate has been updated to " + std::to_string(newRate) + ".\n";
 	cout << "------------------------------------\n";
 
 	return;

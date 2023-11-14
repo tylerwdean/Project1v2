@@ -34,7 +34,7 @@ void Employee::mainMenu() {
 		break;
 	case 3: generateDiscountCode();
 		break;
-	case 4: //addHoursWorked();
+	case 4: addHoursWorked();
 		break;
 	case 5: //viewEarnings();
 		break;
@@ -46,6 +46,32 @@ void Employee::mainMenu() {
 	default:
 		break;
 	}
+}
+
+void Employee::addHoursWorked() {
+
+	string input;
+	int hoursWorked;
+	bool enteredCorrectly = false;
+
+	cout << "Please enter the number of hours worked today, rounded to nearest integer.\n";
+	cin >> input;
+
+	while (!enteredCorrectly) {
+
+		if (stoi(input) > 9 || stoi(input) < 0)
+			enteredCorrectly = true;
+
+		cout << "Please enter a value in the range of 0-9\n";
+		cin >> input;
+	}
+
+	hoursWorked = stoi(input);
+
+
+	string queryInput = "insert into hoursWorked values ("+ to_string(this->userID) + ", " + to_string(hoursWorked) + ")";
+	query(0, queryInput);
+	
 }
 
 void Employee::restockItem() {

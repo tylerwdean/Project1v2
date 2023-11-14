@@ -6,7 +6,7 @@
 using namespace std;
 
 //this function takes a string and return the resulting item, only good for single item queries
-void query(int numOfItems, string queryInput);
+queue<string> query(int numOfItems, string queryInput);
 
 //this function sanitizes a string that the user inputs to ensure it doesn't interfere with any SQL queries
 bool isClean(string dirtyString);

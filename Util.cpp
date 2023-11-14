@@ -132,19 +132,14 @@ void showSQLError(unsigned int handleType, const SQLHANDLE& handle)
         cout << "SQL driver message: " << message << "\nSQL state: " << SQLState << "." << endl;
 }
 
-void query(int numOfItems, string inputQuery) {
+queue<string> query(int numOfItems, string inputQuery) {
+
     SQLHANDLE SQLEnvHandle = NULL;
     SQLHANDLE SQLConnectionHandle = NULL;
     SQLHANDLE SQLStatementHandle = NULL;
     SQLRETURN retCode = 0;
-    const char* myStringChars = inputQuery.c_str();
-    char SQLQuery[] = { *myStringChars };
+    const char *SQLQuery = inputQuery.c_str();
     queue<string> resultQueue;
-
-    while (true) {
-        cout << SQLQuery[1] << "\n";
-        return;
-    }
 
     do {
         if (SQL_SUCCESS != SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &SQLEnvHandle))
@@ -221,5 +216,5 @@ void query(int numOfItems, string inputQuery) {
     SQLFreeHandle(SQL_HANDLE_DBC, SQLConnectionHandle);
     SQLFreeHandle(SQL_HANDLE_ENV, SQLEnvHandle);
 
-    return;
+    return resultQueue;
 }
