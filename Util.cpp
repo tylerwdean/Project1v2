@@ -38,14 +38,13 @@ string hashString(string a, string b) {
 
     string result;
     hash<string> hashFunction;
-    result = hashFunction(a);
-    result += hashFunction(b);
-    result = hashFunction(result);
+    result = to_string(hashFunction(a));
+    result = to_string(hashFunction(b + result));
 
     return result;
 }
 
-bool isValid(string s) {
+bool isValidPassword(string s) {
 
     char c;
     bool hasUpper = false;
@@ -139,6 +138,19 @@ void showSQLError(unsigned int handleType, const SQLHANDLE& handle)
     if (SQL_SUCCESS == SQLGetDiagRec(handleType, handle, 1, SQLState, NULL, message, 1024, NULL))
         // Returns the current values of multiple fields of a diagnostic record that contains error, warning, and status information
         cout << "SQL driver message: " << message << "\nSQL state: " << SQLState << "." << endl;
+}
+
+bool isValidEmail(string email) {
+    int found = email.find("@");
+    int found2 = email.find(".", found);
+
+    if (found != string::npos && found2 != string::npos && found2 != email.length()-1)
+        return true;
+    return false;
+}
+
+bool isValidPhoneNumber(string input) {
+    return !(stoll(input) > 9999999999) || (stoll(input) < 1000000000);
 }
 
 queue<string> query(int numOfItems, string inputQuery) {

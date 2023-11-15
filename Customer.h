@@ -8,12 +8,14 @@ public:
     Customer(int userID);
 
     void mainMenu();
+
+protected:
     //lists all their orders and the cost of them 
     void checkOrderHistory();
     //shows the rewards balance
     //void checkPointsBalance();
     //shows and lets choose to update contact information
-    //void updateInformation();
+    void updateInformation();
     //search for products by name
     void searchForProducts();
     //adds the product to the cart
@@ -21,5 +23,5 @@ public:
     //views whats in the cart and subtotal
     //void viewCart();
 
-    //void changePassword();
+    void changePassword();
 };

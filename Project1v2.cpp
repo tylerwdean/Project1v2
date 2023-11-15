@@ -5,6 +5,8 @@
 
 int main() {
 
+    //query(1, "select username from login where userID = 6");
+    //query(1, "SELECT userID FROM login WHERE password = '11772554993413179630'").front();
     User currentUser = User();
     currentUser.mainMenu();
     

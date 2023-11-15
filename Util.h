@@ -30,7 +30,7 @@ string hashString(string hash1, string hash2);
 *	
 *	Returns true if the string meets these requirements.
 */
-bool isValid(string password);
+bool isValidPassword(string password);
 
 /*	This function generates a random string with uppercase letters, takes length as an integer
 *
@@ -61,3 +61,15 @@ bool isValidProductCode(int productCode);
 *	Returns true if it is a valid orderID
 */
 bool isValidOrder(int orderID);
+
+/*	This function checks the string to see if it is an email address
+
+	Returns true if it is a valid email address
+*/
+bool isValidEmail(string emailAddress);
+
+/* This function checks if the string is a number 10 digits long
+* 
+*	Returns true if it could be a valid phone number
+*/
+bool isValidPhoneNumber(string input);

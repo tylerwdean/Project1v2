@@ -17,7 +17,7 @@ public:
     
 
 protected:
-    int userID = -1;
+    int userID;
     std::string userFirstName;
     //Role userRole;
     
@@ -27,5 +27,6 @@ protected:
     */
     void logIn();
     bool verifyUser();
+    void changePassword();
     void createUser(Role userRole);
 };
