@@ -104,15 +104,29 @@ string generateRandomString(int length) {
     return result;
 }
 
-bool isTaken(string userName) {
+bool isTakenUsername(string userName) {
 
     if (!isClean(userName))
-        return true;    //can't use an unclean name
+        return true;   
+
+    if (userName.compare("quit") == 0)
+        return true;
 
     string query0 = "select username from login where username = '" + userName + "'";
     queue<string> result = query(1, query0);
 
-    return result.size() > 0;
+    return !result.empty();
+}
+
+bool isTakenEmail(string email) {
+    
+    if (!isValidEmail(email))
+        return false;
+
+    string query0 = "select emailAddress from customer where emailAddress = '" + email + "'";
+    queue<string> result = query(0, query0);
+
+    return !result.empty();
 }
 
 bool isValidID(int userID) {

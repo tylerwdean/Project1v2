@@ -77,7 +77,7 @@ bool User::verifyUser() {
         cin >> password;
 
         //ensures that endered password is clean
-        if (!isValidPassword(password) || !isTaken(username)) {
+        if (!isValidPassword(password) || !isTakenUsername(username)) {
             cout << "Verification Failed, Please try again\n";
             cout << "------------------------------------\n";
         }
@@ -124,7 +124,7 @@ void User::createUser(Role userRole) {
             cout << "Don't try to break my code lmao, try again" << endl;
         }
 
-        else if (isTaken(username)) {
+        else if (isTakenUsername(username)) {
             cout << "That username is taken, please try again" << endl;
         }
 

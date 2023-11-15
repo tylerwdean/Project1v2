@@ -129,7 +129,7 @@ void Manager::addEmployee() {
 	cout << "Please enter the new Employee's Username\n";
 	cin >> input;
 
-	while (isTaken(input)) {
+	while (isTakenUsername(input)) {
 		cout << "That username is taken, please enter another one\n";
 		cin >> input;
 	}
@@ -139,7 +139,7 @@ void Manager::addEmployee() {
 	cout << "Please enter the desired password\n";
 	cin >> input;
 
-	while (!isValid(input)) {
+	while (!isValidPassword(input)) {
 		cout << "Please enter a password with 8 characters, an uppercase letter, a lowercase letter and a number\n";
 		cin >> input;
 	}
@@ -181,12 +181,14 @@ void Manager::fireEmployee() {
 		}
 	}
 
-	//select firstName, lastName from employeeContact where userID = userID
-	cout << "Are you sure you want to fire _____, y/n \n";	//add the employee name
+	queue<string> result = query(2, "select firstName, lastName from employeeContact where userID = " + input);
+	cout << "Are you sure you want to fire " + result.front() + " ";
+	result.pop();
+	cout << result.front() << "? y/n: ";
 	cin >> input;
 
 	if (input.compare("y") == 0) {
-		//delete from login where userID = userID
+		string query0 = "delete from login where userID = " + to_string(userID);
 		cout << "Employee is deleted\n";
 		cout << "--------------------------------\n";
 	}
@@ -274,7 +276,9 @@ void Manager::createItem() {
 		}
 	}
 
-	//insert into product values (productName, productPrice, productQuantity)
+	string query0 = "insert into product values('" + productName + "', '" + to_string(productPrice) + 
+		"', " + to_string(startingQuantity) + ")";
+	query(0, query0);
 	cout << "Product successfully added\n";
 	cout << "------------------------------\n\n";
 
@@ -328,7 +332,7 @@ void Manager::updateEmployeeRate() {
 		}
 	}
 
-	//update employee set hourlyRate = newRate where userID = userID
+	string query0 = "update employee set hourlyRate = " + to_string(newRate) + " where userID = " + to_string(userID);
 	cout << "Rate has been updated to " + std::to_string(newRate) + ".\n";
 	cout << "------------------------------------\n";
 

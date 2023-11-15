@@ -1,2 +1,4 @@
-﻿  User.cpp
-  Project1v2.vcxproj -> C:\Users\tyler\School Folder\Database\Project1v2\x64\Debug\Project1v2.exe
+﻿  Util.cpp
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\Util.cpp(158,15): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Tyler\School Work\Database\Project1v2\Project1v2\Util.cpp(159,16): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  Project1v2.vcxproj -> C:\Users\Tyler\School Work\Database\Project1v2\x64\Debug\Project1v2.exe

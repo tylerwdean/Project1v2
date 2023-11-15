@@ -42,7 +42,7 @@ string generateRandomString(int length);
 * 
 *	Returns true if there is already a username matching the string
 */
-bool isTaken(string username);
+bool isTakenUsername(string username);
 
 /*	This functions checks if the integer ID exists as a user but doesn't check for the particular role of the user
 * 
@@ -73,3 +73,5 @@ bool isValidEmail(string emailAddress);
 *	Returns true if it could be a valid phone number
 */
 bool isValidPhoneNumber(string input);
+
+bool isTakenEmail(string email);
