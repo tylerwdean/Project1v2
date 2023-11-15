@@ -81,9 +81,9 @@ bool isValidPassword(string s) {
 
 }
 
-bool isValidProductCode(int productCode) {
+bool isValidProductCode(string productCode) {
 
-    string query0 = "select productCode from inventory where productCode = " + to_string(productCode);
+    string query0 = "select productCode from inventory where productCode = " + productCode;
 
     queue<string> result = query(1, query0);
 

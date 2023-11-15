@@ -32,7 +32,7 @@ public:
     */
     //void updateInformation();
 
-    /*  Allows employee to delete an order given the order number and the phone number for the person who placed it
+    /*  Allows employee to delete an order given the order number
     * 
     *   Removes order from orders
     */

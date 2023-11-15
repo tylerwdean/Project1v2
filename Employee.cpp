@@ -77,8 +77,7 @@ void Employee::addHoursWorked() {
 void Employee::restockItem() {
 	
 	string input;
-	int productCode;
-	int quantityRestocked;
+	string productCode, quantityRestocked;
 	bool enteredCorrectly = false;
 
 	cout << "Please enter the product code for the item you're restocking. Type 'quit' to quit\n";
@@ -92,7 +91,7 @@ void Employee::restockItem() {
 			return;
 		}
 
-		if (isValid(input)) //|| isValidProductCode(stoi(input)))
+		if (isValidProductCode(input))
 			enteredCorrectly = true;
 
 		else {
@@ -101,7 +100,7 @@ void Employee::restockItem() {
 		}
 	}
 
-	productCode = stoi(input);
+	productCode = input;
 	enteredCorrectly = false;
 
 	cout << "Please enter the amount of inventory being restocked.\n.";
@@ -121,10 +120,13 @@ void Employee::restockItem() {
 		}
 	}
 
-	quantityRestocked = stoi(input);
+	quantityRestocked = input;
 	enteredCorrectly = false;
 
-	//update inventory set quantityStocked = quantityStocked + quantityRestocked where productID = productID
+	string query0 = "update inventory set quantityStocked = quantityStocked + " + 
+		quantityRestocked + "where productID = " + productCode;
+	query(0, query0);
+
 	cout << "Successfully restocked\n";
 	cout << "----------------------------------------\n";
 	return;
@@ -157,7 +159,7 @@ void Employee::deleteOrder() {
 	cin >> input;
 
 	if (input.compare("y") == 0) {
-		//delete from orders where orderID = orderNumber
+		string query = "delete from orders where orderID = " + to_string(orderNumber);
 	}
 
 	return;
@@ -171,8 +173,10 @@ void Employee::generateDiscountCode() {
 	cout << "Your discount code is: '" + code + "'";
 	cout << "This is good for 15% off.\n";
 
-	//insert into discountCode values (code, 15)
-	cout << "---------------------------\n";
+	string query0 = "insert into discount values (" + to_string(userID) + ", '" + code + "', 15)";
+	query(0, query0);
+
+	cout << "---------------------------------\n";
 	return;
 }
 

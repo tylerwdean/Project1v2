@@ -54,7 +54,7 @@ bool isValidID(int userID);
 *	
 *	Returns true if product code is linked to a product
 */
-bool isValidProductCode(int productCode);
+bool isValidProductCode(string productCode);
 
 /*	This function checks if the given order is a valid order or not
 * 
