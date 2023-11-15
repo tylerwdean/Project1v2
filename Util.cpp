@@ -110,7 +110,7 @@ bool isTaken(string userName) {
     if (!isClean(userName))
         return true;    //can't use an unclean name
 
-    string query0 = "select userName from login where userName = '" + userName + "'";
+    string query0 = "select username from login where username = '" + userName + "'";
     queue<string> result = query(1, query0);
 
     return result.size() > 0;
@@ -168,7 +168,7 @@ queue<string> query(int numOfItems, string inputQuery) {
             break;
 
         SQLCHAR retConString[1024]; // Conection string
-        switch (SQLDriverConnect(SQLConnectionHandle, NULL, (SQLCHAR*)"DRIVER={SQL Server}; SERVER=EngSQL01.franciscan.edu, 1433; DATABASE=University; UID=tabrown; PWD=76wZ99R@TubVvzf!;", SQL_NTS, retConString, 1024, NULL, SQL_DRIVER_NOPROMPT)) {
+        switch (SQLDriverConnect(SQLConnectionHandle, NULL, (SQLCHAR*)"DRIVER={SQL Server}; SERVER=EngSQL01.franciscan.edu, 1433; DATABASE=Publix; UID=SirillaDean; PWD=FaithWithoutWork;", SQL_NTS, retConString, 1024, NULL, SQL_DRIVER_NOPROMPT)) {
             // Establishes connections to a driver and a data source
         case SQL_SUCCESS:
             break;

@@ -78,11 +78,13 @@ bool User::verifyUser() {
 
         salter = query(1, "SELECT salter FROM login WHERE username = '" + username + "'").front();
         hash = hashString(password, salter);
-        this->userID = std::stoi(query(1, "SELECT ID FROM login WHERE password = '" + hash + "'").front());
+        cout << password << " " << hash;
+        this->userID = std::stoi(query(1, "SELECT userID FROM login WHERE password = '" + hash + "'").front());
 
         //if the query was null then we aren't logged in and so it tries again
         if (this->userID == NULL) {
             cout << "Verification Failed, Please try again\n";
+            cout << salter << " " << this->userID;
             cout << "------------------------------------\n";
         }
 
@@ -145,7 +147,7 @@ void User::createUser(Role userRole) {
     //generates the salter for the hash, hashes and stores the info in the database
     salter = generateRandomString(16);
     hash = hashString(password, salter);
-    //query("INSERT INTO login values (\"" + username + "\", \"" + salter + "\", \"" + hash + "\")");
+    query(0, "INSERT INTO login values ('" + hash + "', '" + salter + "', '" + username + "')");
     cout << "Account created! Please login now." << endl;
     cout << "------------------------------------\n";
 
@@ -155,7 +157,7 @@ void User::createUser(Role userRole) {
 void User::logIn() {
 
     User currentUser;
-    string roleString = query(1, "SELECT role FROM roles WHERE ID = " + to_string(this->userID)).front();
+    string roleString = query(1, "SELECT role FROM roles WHERE userID = " + to_string(this->userID)).front();
 
     if (roleString.compare("employee") == 0) {
         //currentUser = Employee(userID);

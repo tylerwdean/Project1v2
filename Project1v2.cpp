@@ -5,8 +5,8 @@
 
 int main() {
 
-    //Manager currentUser = Manager();
-    //currentUser.mainMenu();
+    User currentUser = User();
+    currentUser.mainMenu();
     
     /*string query0 = "drop table TylerTest";
     string query1 = "create table TylerTest (firstName varchar(20), ID numeric(1,0) unique)";
