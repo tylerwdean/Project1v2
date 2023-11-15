@@ -153,6 +153,7 @@ bool isValidPhoneNumber(string input) {
     return !(stoll(input) > 9999999999) || (stoll(input) < 1000000000);
 }
 
+//don't bother understanding it, just follow the comments to use it
 queue<string> query(int numOfItems, string inputQuery) {
 
     SQLHANDLE SQLEnvHandle = NULL;

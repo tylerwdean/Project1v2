@@ -16,10 +16,10 @@ public:
     void fireEmployee();
     //lists all employees with name and ID
     void viewAllEmployees();
-
+    //updates employee rate given their ID
     void updateEmployeeRate();
-
+    //creates an inventory item
     void createItem();
-
+    //views the costs and profit from orders and employees
     void viewBusinessRevenue();
 };

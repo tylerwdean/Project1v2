@@ -2,6 +2,7 @@
 #include "Util.h"
 #include "Customer.h"
 
+//initializes the user and updates the first name for menu purposes
 Customer::Customer(int userID) {
     this->userID = userID;
     queue<string> firstName = query(1, "select firstName from customer where customerID = " + to_string(userID));
@@ -17,6 +18,7 @@ Customer::Customer(int userID) {
     mainMenu();
 }
 
+//main customer options
 void Customer::mainMenu() {
 
     int userChoice = 0;
@@ -64,6 +66,7 @@ void Customer::mainMenu() {
 
 }
 
+//update the customer name, email and phone number
 void Customer::updateInformation() {
 
     string input;
@@ -122,11 +125,14 @@ void Customer::updateInformation() {
     this->userFirstName = firstName;
 }
 
+//will check for orders that they have and let them also choose which ones to view and view the basket 
+// (viewing the basket will be a seperate function so the cart function can call it too)
 void Customer::checkOrderHistory() {
     
     //select orderNumber, totalCost from orderHistory where userID = this->userID;
 }
 
+//changes the password just because the user is logged in, no verification
 void Customer::changePassword() {
 
     string input;
@@ -146,6 +152,7 @@ void Customer::changePassword() {
     query(0, query0);
 }
 
+//this will eventually search for products and list them
 void Customer::searchForProducts() {
 
     string input;

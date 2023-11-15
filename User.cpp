@@ -107,7 +107,6 @@ bool User::verifyUser() {
 }
 
 
-//this function takes a username, password, creates a salter and stores the information in the database
 void User::createUser(Role userRole) {
 
     string username;
