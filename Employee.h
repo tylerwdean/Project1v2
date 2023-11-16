@@ -7,6 +7,14 @@ using namespace std;
 class Employee : public User {
 public:
 
+    /*  Basic constructor with the userID
+    * 
+    *   Sets up basic information such as gathering name and settings role
+    */
+    Employee(int userID);
+
+    Employee();
+
     /*  The main menu for the employee
     * 
     *   Ends when they logout
@@ -43,4 +51,16 @@ public:
     *   Prints code out to screen and also adds it to database
     */
     void generateDiscountCode();
+
+    /*  Shows the total hours worked and how much has been made
+    * 
+    *   Prints information to the screen
+    */
+    void viewEarnings();
+
+    /*  Function updates their name and phone number
+    * 
+    *   Updates preffered name and phone number
+    */
+    void updateInformation();
 };

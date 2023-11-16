@@ -74,4 +74,12 @@ bool isValidEmail(string emailAddress);
 */
 bool isValidPhoneNumber(string input);
 
+/*	This function sees if the email is taken or not
+* 
+*	Returns true if you can't use the email
+*/
 bool isTakenEmail(string email);
+
+/*  Returns if the string given is a valid employee id
+*/
+bool isValidEmployeeID(std::string userID);

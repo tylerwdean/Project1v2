@@ -5,50 +5,74 @@
 
 using namespace std;
 
+Manager::Manager(int userID) : Employee(){
+	this->userID = userID;
+	this->userRole = manager;
+
+	string query0 = "select firstName from employee where employeeID = " + to_string(userID);
+	queue<string> result = query(1, query0);
+
+	if (!result.empty())
+		this->userFirstName = result.front();
+
+	else {
+		this->userFirstName = query(1, "select userName from login where userID = " + to_string(userID)).front();
+	}
+}
+
+
+
 void Manager::mainMenu() {
 	
 	int userChoice = 0;
 
-	while (userChoice != 7) {
+	while (userChoice != 9) {
 		cout << "Hello " + this->userFirstName + "!\n";
 		cout << "What would you like to do?\n";
 		cout << "1) Add new Employee\n";
-		cout << "2) Add new Product\n";
-		cout << "3) View all Employees\n";
-		cout << "4) Change Employee's Rate\n";
-		cout << "5) Fire Employee\n";
-		cout << "6) See Business Revenue\n";
-		cout << "7) Log out\n";
+		cout << "2) Promote/Add Manager\n";
+		cout << "3) Add new Product\n";
+		cout << "4) View all Employees\n";
+		cout << "5) Change Employee's Rate\n";
+		cout << "6) Fire Employee\n";
+		cout << "7) See Business Revenue\n";
+		cout << "8) Change password\n";
+		cout << "9) Log out\n";
 		cout << "---------------------------------\n";
 		cin >> userChoice;
 
-		while (userChoice > 7 || userChoice < 1) {
+		while (userChoice > 9 || userChoice < 1) {
 			cout << "Please enter valid choice\n";
 			cin >> userChoice;
 		}
 
 		switch (userChoice) {
-			case 1: addEmployee();
+		case 1: addEmployee(Role::employee);
 				break;
-			case 2: createItem();
-				break;
-			case 3: viewAllEmployees();
-				break;
-			case 4: updateEmployeeRate();
-				break;
-			case 5:fireEmployee();
-				break;
-			case 6:viewBusinessRevenue();
-				break;
-			default:
-				break;
+		case 2: addManager();
+			break;
+		case 3: createItem();
+			break;
+		case 4: viewAllEmployees();
+			break;
+		case 5: updateEmployeeRate();
+			break;
+		case 6:fireEmployee();
+			break;
+		case 7:viewBusinessRevenue();
+			break;
+		case 8: changePasswordLoggedIn();
+			break;
+		case 9: return;
+		default:
+			break;
 		}
 	}
 
 	return;
 }
 
-void Manager::addEmployee() {
+void Manager::addEmployee(Role newRole) {
 
 	string input;
 	string employeeFirstName, employeeLastName, newUsername, newPassword;
@@ -149,12 +173,25 @@ void Manager::addEmployee() {
 	string salter = generateRandomString(16);
 	string hashedPassword = hashString(newPassword, salter);
 
-	//insert into login values (newUsername, salter, hashedPassword)
-	cout << "Employee login added to database successfully\n";
-	//int employeeUserID = (select userID from login where username = newusername)
-	//insert into employee values (employeeUserID, hourlyRate, 0, 0)
-	//insert into employeeContact values (employeeUserID, employeeSS, employeePhoneNumber, employeeFirstName, employeeLastName)
-	cout << "Employee information added to ID successfully\n";
+	string query0 = "insert into login values('" + hashedPassword + "', '" + salter + "', '" + newUsername + "')";
+	query(0, query0);
+
+	string employeeUserID = query(1, "select userID from login where username = '" + newUsername + "'").front();
+	query(0, "insert into employee values(" + employeeUserID + ", " + to_string(hourlyRate) + ", " + to_string(employeeSS) + ", "
+		+ to_string(employeePhoneNumber) + ", '" + employeeFirstName + "', '" + employeeLastName + "')");
+
+	string role;
+
+	switch (newRole) {
+	case 1: role = "employee";
+		break;
+	case 2: role = "manager";
+		break;
+	default: role = "customer";
+	}
+
+	query(0, "insert into roles values (" + employeeUserID + ", '" + role + "')");
+
 	cout << "Employee added successfully\n";
 	cout << "-------------------------------------------\n";
 
@@ -164,6 +201,7 @@ void Manager::addEmployee() {
 void Manager::fireEmployee() {
 
 	string input;
+	string employeeID;
 
 	cout << "Please enter the Employee ID of the person you want to remove\n";
 	cin >> input;
@@ -172,7 +210,7 @@ void Manager::fireEmployee() {
 		return;
 	}
 
-	while (!isValidID(std::stoi(input))) {
+	while (!isValidEmployeeID(input)) {
 		cout << "That is not a valid ID. Please enter a different one or type 'quit' to quit\n";
 		cin >> input;
 
@@ -181,14 +219,17 @@ void Manager::fireEmployee() {
 		}
 	}
 
-	queue<string> result = query(2, "select firstName, lastName from employeeContact where userID = " + input);
+	employeeID = input;
+
+	queue<string> result = query(2, "select firstName, lastName from employee where employeeID = " + employeeID);
 	cout << "Are you sure you want to fire " + result.front() + " ";
 	result.pop();
 	cout << result.front() << "? y/n: ";
 	cin >> input;
 
 	if (input.compare("y") == 0) {
-		string query0 = "delete from login where userID = " + to_string(userID);
+		string query0 = "delete from login where userID = " + employeeID;
+		query(0, query0);
 		cout << "Employee is deleted\n";
 		cout << "--------------------------------\n";
 	}
@@ -292,7 +333,7 @@ void Manager::updateEmployeeRate() {
 	int employeeID;
 	bool enteredCorrectly = false;
 
-	cout << "Please enter the Employee ID of the employee you would like to changet the rate of. Enter 'quit' to quit.\n";
+	cout << "Please enter the Employee ID of the employee you would like to change the rate of. Enter 'quit' to quit.\n";
 	cin >> input;
 
 	while (!enteredCorrectly) {
@@ -340,22 +381,85 @@ void Manager::updateEmployeeRate() {
 }
 
 void Manager::viewAllEmployees() {
-	//select userID, firstName, lastName from employeeContact
+	queue<string> result = query(3, "select employeeID, firstName, lastName from employee");
+	string userID, firstName, lastName;
+
+	printf("---------------|---------------|-----\n");
+
+	while (!result.empty()) {
+		userID = result.front();
+		result.pop();
+		firstName = result.front();
+		result.pop();
+		lastName = result.front();
+		result.pop();
+		printf("%-15s|%-15s|%-5s\n", firstName.c_str(), lastName.c_str(), userID.c_str());
+
+	}
+
+	cout << endl;
+
 	return;
 }
 
 void Manager::viewBusinessRevenue() {
 	
-	int totalRevenue = 0;
-	//totalRevenue = select sum(orderTotal) from orderHistory
-	int totalCost = 0;
-	//totalCost = sum (earnings) from employeeHours
+	double totalCost = 0.0;
+	double totalRevenue = stod(query(1, "select sum(orderTotal) from orderHistory").front());
+	double rate;
+	int hours;
+	queue<string> result = query(2, "select rateWorked, hoursWorked from hoursWorked");
 
-	int netProfit = totalRevenue - totalCost;
 
-	cout << "Total Revenue: " + std::to_string(totalRevenue) + "\n";
-	cout << "Total Cost: " + std::to_string(totalCost) + "\n";
-	cout << "Total Net Profit: " + std::to_string(netProfit) + "\n";
+	while (!result.empty()) {
+		rate = stod(result.front());
+		result.pop();
+		hours = stoi(result.front());
+		result.pop();
+		totalCost += (rate * hours);
+	}
+
+	double netProfit = totalRevenue - totalCost;
+
+
+	printf("Total Revenue: %.2f\n", totalRevenue);
+	printf("Total Cost: %.2f\n", totalCost);
+	printf("Total Net Profit: %.2f\n", netProfit);
 
 	return;
+}
+
+void Manager::addManager() {
+
+	string input;
+	string userChoice, employeeID;
+
+	cout << "Would you like to:\n";
+	cout << "1) Add new manager\n";
+	cout << "2) Promote employee\n";
+	cin >> input;
+
+	while (stoi(input) > 2 || stoi(input) < 1) {
+		cout << "Please enter valid choice: \n";
+	}
+
+	userChoice = input;
+
+	if (stoi(input) == 1) {
+		addEmployee(Role::manager);
+	}
+
+	else {
+		cout << "Please enter the employee ID of who you want to promote: ";
+		cin >> input;
+
+		while (!isValidEmployeeID(input)) {
+			cout << "Please enter a valid employee ID: ";
+			cin >> input;
+		}
+
+		employeeID = input;
+
+		query(0, "update roles set role = 'manager' where userID = '" + employeeID + "'");
+	}
 }

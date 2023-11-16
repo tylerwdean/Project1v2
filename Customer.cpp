@@ -12,10 +12,10 @@ Customer::Customer(int userID) {
     }
 
     else {
-        this->userFirstName = query(1, "select username from login where userID = " + to_string(userID)).front();
+        updateInformation();
+        this->userFirstName = query(1, "select firstName from customer where customerID = " + to_string(userID)).front();
     }
 
-    mainMenu();
 }
 
 //main customer options
@@ -51,7 +51,7 @@ void Customer::mainMenu() {
             break;
         case 4: updateInformation();
             break;
-        case 5: changePassword();
+        case 5: changePasswordLoggedIn();
             break;
         case 6: checkOrderHistory();
             break;
@@ -100,8 +100,8 @@ void Customer::updateInformation() {
 
     
 
-    while (!isValidEmail(input)) {
-        cout << "Please enter a valid email address: ";
+    while (!isValidEmail(input) || isTakenEmail(input)) {
+        cout << "Please enter a valid or not taken email address: ";
         cin >> input;
     }
 
@@ -130,26 +130,6 @@ void Customer::updateInformation() {
 void Customer::checkOrderHistory() {
     
     //select orderNumber, totalCost from orderHistory where userID = this->userID;
-}
-
-//changes the password just because the user is logged in, no verification
-void Customer::changePassword() {
-
-    string input;
-    cout << "Please enter the new password: ";
-    cin >> input;
-
-    while (!isValidPassword(input)) {
-        cout << "Please enter a password 8 characters long, with an uppercase letter, lowercase letter and a number.\n";
-        cout << "New password: ";
-        cin >> input;
-    }
-
-    string newPassword = input;
-    string salter = query(1, "select salter from login where userID = " + to_string(userID)).front();
-    string hash = hashString(newPassword, salter);
-    string query0 = "update login set password = '" + hash + "' where userID = " + to_string(this->userID);
-    query(0, query0);
 }
 
 //this will eventually search for products and list them

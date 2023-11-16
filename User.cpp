@@ -78,8 +78,9 @@ bool User::verifyUser() {
 
         //ensures that endered password is clean
         if (!isValidPassword(password) || !isTakenUsername(username)) {
-            cout << "Verification Failed, Please try again\n";
-            cout << "------------------------------------\n";
+            cout << "Please enter a valid username\n";
+            cout << "----------------------------------\n";
+            continue;
         }
 
 
@@ -102,7 +103,7 @@ bool User::verifyUser() {
         
     }
 
-    return true;
+    return isVerified;
 
 }
 
@@ -163,22 +164,22 @@ void User::createUser(Role userRole) {
 
 void User::logIn() {
 
-    User currentUser;
     string roleString = query(1, "SELECT role FROM roles WHERE userID = " + to_string(this->userID)).front();
-
     if (roleString.compare("employee") == 0) {
-        //currentUser = Employee(userID);
+        Employee currentUser = Employee(userID);
+        currentUser.mainMenu();
     }
 
     else if (roleString.compare("manager") == 0) {
-        //currentUser = Manager(userID);
+        Manager currentUser = Manager(userID);
+        currentUser.mainMenu();
     }
 
     else {
-        currentUser = Customer(userID);
+        Customer currentUser = Customer(userID);
+        currentUser.mainMenu();
     }
 
-    cout << "After main menu\n";
     return;
 
 }
@@ -214,8 +215,6 @@ void User::changePassword() {
 
     phoneNumber = stoll(input);
 
-    //this section can be improved. You could ensure that no two phone numbers or email addresses are the same but alas, that would take more time unneccessarily for now
-    cout << to_string(phoneNumber) << " " << email << endl;
     string query1 = "select customerID from customer where phoneNumber = " + to_string(phoneNumber) + " and emailAddress = '" + email + "'";
     result = query(1, query1);
 
@@ -244,4 +243,71 @@ void User::changePassword() {
     }
 
     return;
+}
+
+void User::changePasswordLoggedIn() {
+
+    string input;
+    cout << "Please enter the new password: ";
+    cin >> input;
+
+    while (!isValidPassword(input)) {
+        cout << "Please enter a password 8 characters long, with an uppercase letter, lowercase letter and a number.\n";
+        cout << "New password: ";
+        cin >> input;
+    }
+
+    string newPassword = input;
+    string salter = query(1, "select salter from login where userID = " + to_string(userID)).front();
+    string hash = hashString(newPassword, salter);
+    string query0 = "update login set password = '" + hash + "' where userID = " + to_string(this->userID);
+    query(0, query0);
+}
+
+
+void User::viewInformation() {
+
+    string firstName, lastName, socialSecurity, phoneNumber;
+    queue<string> result;
+
+    if (userRole == customer) {
+
+        string query0 = "select firstName, lastName, phoneNumber, emailAddress from customer where customerID = " + to_string(userID);
+        result = query(4, query0);
+        cout << "First name: ";
+        cout << result.front();
+        result.pop();
+        cout << "\nLast name: ";
+        cout << result.front();
+        result.pop();
+        cout << "\nPhone Number: ";
+        cout << result.front();
+        result.pop();
+        cout << "Email Address: ";
+        cout << result.front();
+        result.pop();
+        cout << endl;
+
+        return;
+    }
+
+    else if (userRole == employee || userRole == manager) {
+
+        string query0 = "select firstName, lastName, phoneNumber from employee where employeeID = " + to_string(userID);
+        result = query(3, query0);
+        cout << "First name: ";
+        cout << result.front();
+        result.pop();
+        cout << "\nLast name: ";
+        cout << result.front();
+        result.pop();
+        cout << "\nPhone Number: ";
+        cout << result.front();
+        result.pop();
+        cout << endl;
+
+        return;
+    }
+
+
 }

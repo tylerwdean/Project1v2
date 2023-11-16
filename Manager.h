@@ -7,11 +7,11 @@ using namespace std;
 class Manager : public Employee {
 public:
 
-    //Manager(int userID);
+    Manager(int userID);
 
     void mainMenu();
     //hires employee
-    void addEmployee();
+    void addEmployee(Role newRole);
     //fires
     void fireEmployee();
     //lists all employees with name and ID
@@ -22,4 +22,6 @@ public:
     void createItem();
     //views the costs and profit from orders and employees
     void viewBusinessRevenue();
+
+    void addManager();
 };

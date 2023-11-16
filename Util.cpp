@@ -129,6 +129,16 @@ bool isTakenEmail(string email) {
     return !result.empty();
 }
 
+bool isValidEmployeeID(string userID) {
+
+    if (!isValidID(stoi(userID)))
+        return false;
+
+    string role = query(1, "select role from roles where userID = " + userID).front();
+
+    return (role.compare("employee") == 0) || (role.compare("manager") == 0);
+}
+
 bool isValidID(int userID) {
 
     string query0 = "select userID from login where userID = " + to_string(userID);

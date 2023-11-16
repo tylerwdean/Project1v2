@@ -20,6 +20,7 @@ protected:
 
     int userID;
     std::string userFirstName;
+    Role userRole;
 
     /*  This function logs the customer in after they enter their information
     * 
@@ -40,9 +41,22 @@ protected:
     */
     void changePassword();
 
+    /*  This function changes the password but is designed for when the user is logged in and has a userID
+    * 
+    *   Changes the password
+    */
+    void changePasswordLoggedIn();
+
     /*  This function is used to register a new user and is passed the appropriate role
     * 
     *   Doesn't return anything but adds new login information to login table
     */
     void createUser(Role userRole);
+
+    /*  Displays basic information depending on the user's role
+    *
+    *   Doesn't change anything
+    */
+    void viewInformation();
+
 };

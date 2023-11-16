@@ -22,6 +22,4 @@ protected:
     //void addToCart(int productID, int quantity);
     //views whats in the cart and subtotal
     //void viewCart();
-
-    void changePassword();
 };
