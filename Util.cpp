@@ -7,153 +7,10 @@
 #include <sqltypes.h>
 #include <sql.h>
 #include "Util.h"
+#include <algorithm>
 
 
 using namespace std;
-
-bool isClean(string s) {
-    char c;
-
-    for (int i = 0; i < s.length(); i++) {
-        c = s.at(i);
-
-        //checks for valid characters
-        if ((c > 64 && c < 91) || (c > 96 && c < 123) || (c > 47 && c < 58)
-            || c == 95 || c == 33 || c == 42 || c == 45 || c == 36
-            || c == 63 || c == 37 || c == 38) {
-            continue;
-        }
-
-        //if character isn't accpetable, reject
-        else {
-            return false;
-        }
-
-    }
-
-    return true;
-}
-
-string hashString(string a, string b) {
-
-    string result;
-    hash<string> hashFunction;
-    result = to_string(hashFunction(a));
-    result = to_string(hashFunction(b + result));
-
-    return result;
-}
-
-bool isValidPassword(string s) {
-
-    char c;
-    bool hasUpper = false;
-    bool hasLower = false;
-    bool hasNumber = false;
-
-    for (int i = 0; i < s.length(); i++) {
-
-        c = s.at(i);
-
-        if (c > 64 && c < 91) {
-            hasUpper = true;
-        }
-
-        else if (c > 96 && c < 123) {
-            hasLower = true;
-        }
-
-        else if (c > 47 && c < 58) {
-            hasNumber = true;
-        }
-
-        else if (c == 95 || c == 33 ||
-            c == 42 || c == 45 || c == 36 || c == 63 || c == 37 || c == 38) {
-
-        }
-
-        else {
-            return false;
-        }
-    }
-
-    return hasUpper && hasLower && hasNumber;
-
-}
-
-bool isValidProductCode(string productCode) {
-
-    string query0 = "select productCode from inventory where productCode = " + productCode;
-
-    queue<string> result = query(1, query0);
-
-    return result.size() == 1;
-
-}
-
-string generateRandomString(int length) {
-
-    string result;
-
-    srand((unsigned)time(NULL));
-
-    for (int i = 0; i < length; i++) {
-        result += (char)((rand() % 26) + 65);
-    }
-
-    return result;
-}
-
-bool isTakenUsername(string userName) {
-
-    if (!isClean(userName))
-        return true;   
-
-    if (userName.compare("quit") == 0)
-        return true;
-
-    string query0 = "select username from login where username = '" + userName + "'";
-    queue<string> result = query(1, query0);
-
-    return !result.empty();
-}
-
-bool isTakenEmail(string email) {
-    
-    if (!isValidEmail(email))
-        return false;
-
-    string query0 = "select emailAddress from customer where emailAddress = '" + email + "'";
-    queue<string> result = query(0, query0);
-
-    return !result.empty();
-}
-
-bool isValidEmployeeID(string userID) {
-
-    if (!isValidID(stoi(userID)))
-        return false;
-
-    string role = query(1, "select role from roles where userID = " + userID).front();
-
-    return (role.compare("employee") == 0) || (role.compare("manager") == 0);
-}
-
-bool isValidID(int userID) {
-
-    string query0 = "select userID from login where userID = " + to_string(userID);
-    queue<string> result = query(1, query0);
-
-    return result.size() == 1;
-}
-
-bool isValidOrder(int orderID) {
-
-    string query0 = "select orderID from orders where orderID = " + to_string(orderID);
-    queue<string> result = query(1, query0);
-
-    return result.size() > 0;
-}
 
 void showSQLError(unsigned int handleType, const SQLHANDLE& handle)
 {
@@ -163,20 +20,6 @@ void showSQLError(unsigned int handleType, const SQLHANDLE& handle)
         // Returns the current values of multiple fields of a diagnostic record that contains error, warning, and status information
         cout << "SQL driver message: " << message << "\nSQL state: " << SQLState << "." << endl;
 }
-
-bool isValidEmail(string email) {
-    int found = email.find("@");
-    int found2 = email.find(".", found);
-
-    if (found != string::npos && found2 != string::npos && found2 != email.length()-1)
-        return true;
-    return false;
-}
-
-bool isValidPhoneNumber(string input) {
-    return !(stoll(input) > 9999999999) || (stoll(input) < 1000000000);
-}
-
 //don't bother understanding it, just follow the comments to use it
 queue<string> query(int numOfItems, string inputQuery) {
 
@@ -184,7 +27,7 @@ queue<string> query(int numOfItems, string inputQuery) {
     SQLHANDLE SQLConnectionHandle = NULL;
     SQLHANDLE SQLStatementHandle = NULL;
     SQLRETURN retCode = 0;
-    const char *SQLQuery = inputQuery.c_str();
+    const char* SQLQuery = inputQuery.c_str();
     queue<string> resultQueue;
 
     do {
@@ -263,4 +106,288 @@ queue<string> query(int numOfItems, string inputQuery) {
     SQLFreeHandle(SQL_HANDLE_ENV, SQLEnvHandle);
 
     return resultQueue;
+}
+
+string hashString(string a, string b) {
+
+    string result;
+    hash<string> hashFunction;
+    result = to_string(hashFunction(a));
+    result = to_string(hashFunction(b + result));
+
+    return result;
+}
+
+bool isClean(string s) {
+    char c;
+
+    for (int i = 0; i < s.length(); i++) {
+        c = s.at(i);
+
+        //checks for valid characters
+        if ((c > 63 && c < 91) || (c > 96 && c < 123) || (c > 47 && c < 58)
+            || c == 95 || c == 33 || c == 42 || c == 45 || c == 36
+            || c == 63 || c == 37 || c == 38 || c == 46 || c == 39) {
+            continue;
+        }
+
+        //if character isn't accpetable, reject
+        else {
+            return false;
+        }
+
+    }
+
+    return true;
+}
+
+bool isValidPassword(string s) {
+
+    char c;
+    bool hasUpper = false;
+    bool hasLower = false;
+    bool hasNumber = false;
+
+    for (int i = 0; i < s.length(); i++) {
+
+        c = s.at(i);
+
+        if (c > 64 && c < 91) {
+            hasUpper = true;
+        }
+
+        else if (c > 96 && c < 123) {
+            hasLower = true;
+        }
+
+        else if (c > 47 && c < 58) {
+            hasNumber = true;
+        }
+
+        else if (c == 95 || c == 33 || c == 42 || c == 45 || 
+            c == 46 || c == 36 || c == 63 || c == 37 || c == 38 || c == 64 || c == 39) {
+
+        }
+
+        else {
+            return false;
+        }
+    }
+
+    return hasUpper && hasLower && hasNumber;
+
+}
+
+bool isValidProductCode(string productCode) {
+
+    string query0 = "select productCode from inventory where productCode = " + productCode;
+
+    queue<string> result = query(1, query0);
+
+    return result.size() == 1;
+
+}
+
+string generateRandomString(int length) {
+
+    string result;
+
+    srand((unsigned)time(NULL));
+
+    for (int i = 0; i < length; i++) {
+        result += (char)((rand() % 26) + 65);
+    }
+
+    return result;
+}
+
+bool isTakenUsername(string userName) {
+
+    if (!isClean(userName))
+        return true;   
+
+    if (userName.compare("quit") == 0)
+        return true;
+
+    string query0 = "select username from login where username = '" + changeApostraphe(userName) + "'";
+    queue<string> result = query(1, query0);
+
+    return !result.empty();
+}
+
+bool isTakenEmail(string email) {
+    
+    if (!isValidEmail(email))
+        return false;
+
+    string query0 = "select emailAddress from customer where emailAddress = '" + changeApostraphe(email) + "'";
+    queue<string> result = query(0, query0);
+
+    return !result.empty();
+}
+
+bool isTakenDiscountCode(string code) {
+    queue<string> result = query(1, "select discountCode from discount where discountCode = '" + changeApostraphe(code) + "'");
+
+    return result.size() > 0;
+}
+
+bool isValidEmployeeID(string userID) {
+
+    if (!isValidID(stoi(userID)))
+        return false;
+
+    queue<string> role = query(1, "select employeeID from employee where employeeID = " + userID);
+
+    return (!role.empty());
+}
+
+bool isValidID(int userID) {
+
+    string query0 = "select userID from login where userID = " + to_string(userID);
+    queue<string> result = query(1, query0);
+
+    return result.size() == 1;
+}
+
+bool isValidOrder(int orderID) {
+
+    string query0 = "select orderID from orders where orderID = " + to_string(orderID);
+    queue<string> result = query(1, query0);
+
+    return result.size() > 0;
+}
+
+bool isValidEmail(string email) {
+    int found = email.find("@");
+    int found2 = email.find(".", found);
+
+    if (found != string::npos && found2 != string::npos && found2 != email.length()-1)
+        return true;
+    return false;
+}
+
+bool isValidPhoneNumber(string input) {
+    return !(stoll(input) > 9999999999) || (stoll(input) < 1000000000);
+}
+
+string getPhoneNumber() {
+    string phoneNumber = getNumberInRange(1000000000, 9999999999);
+    return phoneNumber;
+}
+
+string getNumberInRange(long long low, long long high) {
+
+    string input;
+    bool enteredCorrectly = false;
+    long long number;
+
+    input = getLine();
+
+    while (!enteredCorrectly) {
+        if (isClean(input)) {
+            try {
+                number = stoll(input);
+                if (number >= low && number <= high) {
+                    enteredCorrectly = true;
+                    continue;
+                }
+            }
+            catch (...) {
+                
+            }
+        }
+
+        cout << "That's not a valid input.\n";
+        cout << input << endl;
+        cout << "Enter a value in the range " + to_string(low) + " to " + to_string(high) + ": ";
+        input = getLine();
+    }
+
+    return input;
+}
+
+string getEmail() {
+
+    string input;
+    bool enteredCorrectly = false;
+    input = getLine();
+
+    while (!enteredCorrectly) {
+
+        if (isClean(input) && isValidEmail(input)) {
+            enteredCorrectly = true;
+            continue;
+        }
+
+        cout << "That's not a valid email address.\n";
+        cout << "Please enter a valid email address: \n";
+        input = getLine();
+    }
+
+    return input;
+}
+
+string getLine() {
+
+    string input;
+    bool enteredCorrectly = false;
+
+    cin >> input;
+    while (!enteredCorrectly) {
+
+        if (isClean(input)) {
+            enteredCorrectly = true;
+            continue;
+        }
+
+        cout << "That's not a valid input.\n";
+        cout << "Please enter a valid input: ";
+        cin >> input;
+    }
+
+    return input;
+}
+
+string changeApostraphe(string input) {
+
+    for (int i = 0; i < input.length(); i++) {
+        if (input.at(i) == '\'') {
+            input.insert(i + 1, "\'");
+            i++;
+        }
+    }
+
+    return input;
+}
+
+string getDoubleInRange(double low, double high) {
+    
+    string input;
+    bool enteredCorrectly = false;
+    long long number;
+
+    input = getLine();
+
+    while (!enteredCorrectly) {
+        if (isClean(input)) {
+            try {
+                number = stod(input);
+                if (number >= low && number <= high) {
+                    enteredCorrectly = true;
+                    continue;
+                }
+            }
+            catch (...) {
+
+            }
+        }
+
+        cout << "That's not a valid input.\n";
+        cout << "Enter a value in the range " + to_string(low) + " to " + to_string(high) + ": ";
+        input = getLine();
+    }
+
+    return input;
+    
 }

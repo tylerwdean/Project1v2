@@ -24,4 +24,6 @@ public:
     void viewBusinessRevenue();
 
     void addManager();
+
+    void generateDiscountCode();
 };

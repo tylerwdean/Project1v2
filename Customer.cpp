@@ -70,57 +70,44 @@ void Customer::mainMenu() {
 void Customer::updateInformation() {
 
     string input;
-    string firstName, lastName, emailAddress;
-    long long phoneNumber;
+    string firstName, lastName, emailAddress, phoneNumber;
     bool enteredCorrectly = false;
 
 
     cout << "Please enter your first name: ";
-    cin >> input;
-
-    firstName = input;
+    firstName = getLine();
 
     cout << "Please enter your last name: ";
-    cin >> input;
-
-    lastName = input;
+    lastName = getLine();
 
     cout << "Please enter your phone number: ";
-    cin >> input;
-
-    while (!isValidPhoneNumber(input)) {
-        cout << "Please enter a valid phone number, digits only: ";
-        cin >> input;
-    }
-
-    phoneNumber = stoll(input);
+    phoneNumber = getPhoneNumber();
 
     cout << "Please enter your email address: ";
-    cin >> input;
+    emailAddress = getEmail();
 
-    
+    while (isTakenEmail(emailAddress)) {
 
-    while (!isValidEmail(input) || isTakenEmail(input)) {
-        cout << "Please enter a valid or not taken email address: ";
-        cin >> input;
+        if (stoi(query(1, "select customerID from customer where emailAddress = '" + changeApostraphe(emailAddress) + "'").front()) == userID)
+            break;
+
+        cout << "That email address is taken, please enter an available one: ";
+        emailAddress = getEmail();
     }
-
-    emailAddress = input;
 
     queue<string> result = query(1, "select customerID from customer where customerID = " +
         to_string(this->userID));
 
     if (!result.empty()) {
-        query(0, "update customer set firstName = '" + firstName + "', lastName = '"
-            + lastName + "', emailAddress = '" + emailAddress + "', phoneNumber = " +
-            to_string(phoneNumber) + " where customerID = " + to_string(userID));
+        query(0, "update customer set firstName = '" + changeApostraphe(firstName) + "', lastName = '"
+            + changeApostraphe(lastName) + "', emailAddress = '" + changeApostraphe(emailAddress) + "', phoneNumber = " +
+            phoneNumber + " where customerID = " + to_string(userID));
     }
     
     else {
-        query(0, "insert into customer values (" + to_string(userID) + ", '" + firstName
-            + "', '" + lastName + "', '" + emailAddress + "', " + to_string(phoneNumber) + ")");
+        query(0, "insert into customer values (" + to_string(userID) + ", '" + changeApostraphe(firstName)
+            + "', '" + changeApostraphe(lastName) + "', '" + changeApostraphe(emailAddress) + "', " + phoneNumber + ")");
     }
-    
 
     this->userFirstName = firstName;
 }
@@ -135,15 +122,50 @@ void Customer::checkOrderHistory() {
 //this will eventually search for products and list them
 void Customer::searchForProducts() {
 
-    string input;
+    string search;
+    string product;
     bool searching = true;
+    queue<string> result;
+    int i, interestedProduct;
+
+    cout << "\nPlease enter the name of the product you're looking for. Type 'Done' to stop searching.\n";
+    search = getLine();
 
     while (searching) {
-        cout << "Please enter the name of the product you're looking for. Type 'Done' to stop searching.\n";
-        cin >> input;
 
-        if (input.compare("Done") == 0 || input.compare("done") == 0)
+        if (search.compare("Done") == 0 || search.compare("done") == 0)
             return;
+
+        result = query(1, "Select productName from inventory where productName like '%" + changeApostraphe(search) + "%'");
+
+        if (result.empty()) {
+            cout << "No results\n";
+            continue;
+        }
+
+        for(i = 1; !result.empty(); i++) {
+
+            product = result.front();
+            result.pop();
+            cout << i << ") " + product + "\n";
+            cout << "------------------------------\n";
+        }
+        cout << "Enter the number for the product you want to look at more,the name of an item you want to search for, or 'done' to stop searching.\n";
+        search = getLine();
+
+        try {
+            interestedProduct = stoi(search);
+            if (interestedProduct > i || interestedProduct < 1) {
+                cout << "Number not in acceptable range. Please enter a product name or 'done' to stop searching\n";
+                search = getLine();
+            }
+        }
+        catch (...) {
+            continue;
+        }
+
+        result = query(3, "select productName, productPrice, quantityStocked from inventory where productName = '" + changeApostraphe(product) + "'");
+        
     }
 }
 

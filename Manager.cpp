@@ -2,6 +2,7 @@
 #include "Util.h"
 #include <string>
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -24,46 +25,50 @@ Manager::Manager(int userID) : Employee(){
 
 void Manager::mainMenu() {
 	
-	int userChoice = 0;
+	string userChoice = "0";
 
-	while (userChoice != 9) {
-		cout << "Hello " + this->userFirstName + "!\n";
+	while (stoi(userChoice) != 12) {
+		cout << "\nHello " + this->userFirstName + "!\n";
 		cout << "What would you like to do?\n";
 		cout << "1) Add new Employee\n";
 		cout << "2) Promote/Add Manager\n";
-		cout << "3) Add new Product\n";
-		cout << "4) View all Employees\n";
-		cout << "5) Change Employee's Rate\n";
-		cout << "6) Fire Employee\n";
-		cout << "7) See Business Revenue\n";
-		cout << "8) Change password\n";
-		cout << "9) Log out\n";
+		cout << "3) Add hours worked\n";
+		cout << "4) Add new Product\n";
+		cout << "5) Generate Discount Code\n";
+		cout << "6) View all Employees\n";
+		cout << "7) Change Employee's Rate\n";
+		cout << "8) Fire Employee\n";
+		cout << "9) See Business Revenue\n";
+		cout << "10) Change password\n";
+		cout << "11) Update Information\n";
+		cout << "12) Log out\n";
 		cout << "---------------------------------\n";
-		cin >> userChoice;
+		userChoice = getNumberInRange(1, 12);
 
-		while (userChoice > 9 || userChoice < 1) {
-			cout << "Please enter valid choice\n";
-			cin >> userChoice;
-		}
-
-		switch (userChoice) {
+		switch (stoi(userChoice)) {
 		case 1: addEmployee(Role::employee);
 				break;
 		case 2: addManager();
 			break;
-		case 3: createItem();
+		case 3: addHoursWorked();
 			break;
-		case 4: viewAllEmployees();
+		case 4: createItem();
 			break;
-		case 5: updateEmployeeRate();
+		case 5: generateDiscountCode();
 			break;
-		case 6:fireEmployee();
+		case 6: viewAllEmployees();
 			break;
-		case 7:viewBusinessRevenue();
+		case 7: updateEmployeeRate();
 			break;
-		case 8: changePasswordLoggedIn();
+		case 8:fireEmployee();
 			break;
-		case 9: return;
+		case 9:viewBusinessRevenue();
+			break;
+		case 10: changePasswordLoggedIn();
+			break;
+		case 11: updateInformation();
+			break;
+		case 12: return;
 		default:
 			break;
 		}
@@ -72,113 +77,67 @@ void Manager::mainMenu() {
 	return;
 }
 
+void Manager::generateDiscountCode() {
+	
+	string discountPercentage;
+	
+	cout << "How much will the discount code be off? (Digits only, 0-100): ";
+	discountPercentage = getNumberInRange(0, 100);
+
+	Employee::generateDiscountCode(discountPercentage);
+}
+
 void Manager::addEmployee(Role newRole) {
 
-	string input;
-	string employeeFirstName, employeeLastName, newUsername, newPassword;
-	int employeeSS;
-	long long employeePhoneNumber;
-	double hourlyRate;
-
+	string employeeFirstName, employeeLastName, newUsername, newPassword, employeeSS, employeePhoneNumber, hourlyRate;
 
 	cout << "----------------------------\n";
 	cout << "Please enter new employee's first name or 'quit' to go back\n";
-	cin >> input;
+	employeeFirstName = getLine();
 	
-	if (input.compare("quit") == 0) {
+	if (employeeFirstName.compare("quit") == 0) {
 		return;
 	}
-
-	employeeFirstName = input;
 
 	cout << "Please enter new employee's last name\n";
-	cin >> input;
-
-	if (input.compare("quit") == 0) {
-		return;
-	}
-
-	employeeLastName = input;
+	employeeLastName = getLine();
 
 	cout << "Please enter their hourly rate\n";
-	cin >> input;
-
-	while (std::stod(input) <= 0) {
-		cout << "Please enter valid rate";
-		cin >> input;
-	}
-
-	hourlyRate = std::stod(input);
+	hourlyRate = getDoubleInRange(0.0, 100.0);
 
 	cout << "Please enter new employee's Social Security Number\n";
-	cin >> input;
-
-	if (input.compare("quit") == 0) {
-		return;
-	}
-
-	employeeSS = std::stoi(input);
-
-	while (employeeSS < 100000000 || employeeSS > 999999999) {
-		cout << "Please enter valid Social Security Number without any extra characters\n";
-		cin >> input;
-		
-		if (input.compare("quit") == 0) {
-			return;
-		}
-
-		employeeSS = std::stoi(input);
-	}
+	employeeSS = getNumberInRange(100000000, 999999999);
 
 	cout << "Please enter the employee's phone number, digits only\n";
-	cin >> input;
+	employeePhoneNumber = getNumberInRange(1000000000, 9999999999);
 
-	if (input.compare("quit") == 0) {
-		return;
-	}
-
-	employeePhoneNumber = std::stoll(input);
-
-	while (employeePhoneNumber < 1000000000 || employeePhoneNumber > 9999999999) {
-		cout << "Please enter valid phone number\n";
-		cin >> input;
-
-		if (input.compare("quit") == 0) {
-			return;
-		}
-
-		employeePhoneNumber = std::stoi(input);
-	}
 
 	cout << "Please enter the new Employee's Username\n";
-	cin >> input;
+	newUsername = getLine();
 
-	while (isTakenUsername(input)) {
+	while (isTakenUsername(newUsername)) {
 		cout << "That username is taken, please enter another one\n";
-		cin >> input;
+		newUsername = getLine();
 	}
 
-	newUsername = input;
 
 	cout << "Please enter the desired password\n";
-	cin >> input;
+	newPassword = getLine();
 
-	while (!isValidPassword(input)) {
+	while (!isValidPassword(newPassword)) {
 		cout << "Please enter a password with 8 characters, an uppercase letter, a lowercase letter and a number\n";
-		cin >> input;
+		newPassword = getLine();
 	}
-
-	newPassword = input;
 
 	string salter = generateRandomString(16);
 	string hashedPassword = hashString(newPassword, salter);
 
-	string query0 = "insert into login values('" + hashedPassword + "', '" + salter + "', '" + newUsername + "')";
+	string query0 = "insert into login values('" + hashedPassword + "', '" + salter + "', '" + changeApostraphe(newUsername) + "')";
 	query(0, query0);
 
 	string employeeUserID = query(1, "select userID from login where username = '" + newUsername + "'").front();
-	query(0, "insert into employee values(" + employeeUserID + ", " + to_string(hourlyRate) + ", " + to_string(employeeSS) + ", "
-		+ to_string(employeePhoneNumber) + ", '" + employeeFirstName + "', '" + employeeLastName + "')");
+	query(0, "insert into employee values(" + employeeUserID + ", " + hourlyRate + ", " + employeeSS + ", "
+		+ employeePhoneNumber + ", '" + changeApostraphe(employeeFirstName) + "', '" + changeApostraphe(employeeLastName) + "')");
 
 	string role;
 
@@ -192,6 +151,8 @@ void Manager::addEmployee(Role newRole) {
 
 	query(0, "insert into roles values (" + employeeUserID + ", '" + role + "')");
 
+	query(0, "insert into hiringManager values (" + employeeUserID + ", " + to_string(userID) + ")");
+
 	cout << "Employee added successfully\n";
 	cout << "-------------------------------------------\n";
 
@@ -203,23 +164,18 @@ void Manager::fireEmployee() {
 	string input;
 	string employeeID;
 
-	cout << "Please enter the Employee ID of the person you want to remove\n";
-	cin >> input;
+	cout << "Please enter the Employee ID of the person you want to remove or -1 to quit\n";
+	employeeID = getNumberInRange(-1, 100000000);
 
-	if (input.compare("quit") == 0) {
-		return;
-	}
-
-	while (!isValidEmployeeID(input)) {
-		cout << "That is not a valid ID. Please enter a different one or type 'quit' to quit\n";
-		cin >> input;
-
-		if (input.compare("quit") == 0) {
+	while (!isValidEmployeeID(employeeID)) {
+		
+		if (input.compare("-1") == 0) {
 			return;
 		}
+		
+		cout << "That is not a valid ID. Please enter a different one.\n";
+		employeeID = getNumberInRange(-1, 100000000);
 	}
-
-	employeeID = input;
 
 	queue<string> result = query(2, "select firstName, lastName from employee where employeeID = " + employeeID);
 	cout << "Are you sure you want to fire " + result.front() + " ";
@@ -246,79 +202,42 @@ void Manager::createItem() {
 
 	string input;
 	string productName;
-	double productPrice;
-	int startingQuantity;
+	string productPrice;
+	string startingQuantity;
 	bool enteredCorrectly = false;
 
-	cout << "Please enter the name of the product you want to add. Type 'quit' anytime to quit\n";
-	cin >> input;
+	cout << "Please enter the name of the product you want to add. Type 'quit' to quit. Type '_' instead of spaces.\n";
+	productName = getLine();
+	std::replace(productName.begin(), productName.end(), '_', ' '); 
 
 	while (!enteredCorrectly) {
 
-		if (input.compare("quit") == 0)
+		if (productName.compare("quit") == 0)
 			return;
 
-		cout << "You entered: '" + input + "'. Is that what you want to keep it as? y/n\n";
+		cout << "You entered: '" + productName + "'. Is that what you want to keep it as? y/n\n";
 		cin >> input;
 
 		if (input.compare("y") == 0)
 			enteredCorrectly = true;
 
-		else if (!isClean(input)) {
-			cout << "Not a valid product name, please try again\n";
-			cin >> input;
-		}
-
 		else {
 			cout << "Please enter the name of the product you want to add.\n";
-			cin >> input;
+			productName = getLine();
+			std::replace(productName.begin(), productName.end(), '_', ' ');
 		}
 	}
 
 	enteredCorrectly = false;
 
 	cout << "What is the price of the item?\n";
-	cin >> input;
-
-	while (!enteredCorrectly) {
-
-		if (input.compare("quit") == 0)
-			return;
-
-		if (std::stod(input) > 0) {
-			enteredCorrectly = true;
-			productPrice = std::stod(input);
-		}
-
-		else {
-			cout << "Please enter a valid price.\n";
-			cin >> input;
-		}
-	}
-
-	enteredCorrectly = false;
+	productPrice = getDoubleInRange(0.01, 10000.0);
 
 	cout << "How many of these items do you want to stock initially?\n";
-	cin >> input;
+	startingQuantity = getNumberInRange(0, 10000);
 
-	while (!enteredCorrectly) {
-
-		if (input.compare("quit") == 0)
-			return;
-
-		if (std::stoi(input) > -1) {
-			enteredCorrectly = true;
-			startingQuantity = std::stoi(input);
-		}
-		
-		else {
-			cout << "Please enter a valid number.\n";
-			cin >> input;
-		}
-	}
-
-	string query0 = "insert into product values('" + productName + "', '" + to_string(productPrice) + 
-		"', " + to_string(startingQuantity) + ")";
+	string query0 = "insert into inventory values('" + changeApostraphe(productName) + "', " + productPrice +
+		", " + startingQuantity + ")";
 	query(0, query0);
 	cout << "Product successfully added\n";
 	cout << "------------------------------\n\n";
@@ -328,53 +247,38 @@ void Manager::createItem() {
 
 void Manager::updateEmployeeRate() {
 
-	double newRate;
+	string newRate;
 	string input;
-	int employeeID;
+	string employeeID;
 	bool enteredCorrectly = false;
 
 	cout << "Please enter the Employee ID of the employee you would like to change the rate of. Enter 'quit' to quit.\n";
-	cin >> input;
+	employeeID = getNumberInRange(0, 10000);
 
 	while (!enteredCorrectly) {
 
-		if (input.compare("quit") == 0)
-			return;
-
 		if (isValidID(std::stoi(input))) {
 			enteredCorrectly = true;
-			employeeID = std::stoi(input);
 		}
 
 		else {
 			cout << "Please enter valid employee ID\n";
-			cin >> input;
+			employeeID = getNumberInRange(0, 10000);
 		}
 	}
 
 	enteredCorrectly = false;
 
-	cout << "Please enter the new rate of the employee.\n";
-	cin >> input;
-
-	while (!enteredCorrectly) {
-
-		if (input.compare("quit") == 0)
-			return;
-
-		if (std::stod(input) > 0) {
-			enteredCorrectly = true;
-			newRate = std::stod(input);
-		}
-		
-		else {
-			cout << "Please enter valid rate.\n";
-			cin >> input;
-		}
+	if (employeeID.compare(to_string(userID)) == 0) {
+		cout << "You can't change how much you're paid!!\n";
+		return;
 	}
 
-	string query0 = "update employee set hourlyRate = " + to_string(newRate) + " where userID = " + to_string(userID);
-	cout << "Rate has been updated to " + std::to_string(newRate) + ".\n";
+	cout << "Please enter the new rate of the employee.\n";
+	newRate = getDoubleInRange(0.0, 100.0);
+
+	string query0 = "update employee set hourlyRate = " + newRate + " where userID = " + to_string(userID);
+	cout << "Rate has been updated to " + newRate + ".\n";
 	cout << "------------------------------------\n";
 
 	return;
@@ -405,11 +309,18 @@ void Manager::viewAllEmployees() {
 void Manager::viewBusinessRevenue() {
 	
 	double totalCost = 0.0;
-	double totalRevenue = stod(query(1, "select sum(orderTotal) from orderHistory").front());
+	queue<string> result = query(1, "select totalCost from orderHistory");
+	double totalRevenue = 0.0;
+
+	while (!result.empty()) {
+		totalRevenue += stod(result.front());
+		result.pop();
+	}
+
 	double rate;
 	int hours;
-	queue<string> result = query(2, "select rateWorked, hoursWorked from hoursWorked");
 
+	result = query(2, "select rateWorked, hoursWorked from hoursWorked");
 
 	while (!result.empty()) {
 		rate = stod(result.front());
@@ -418,7 +329,6 @@ void Manager::viewBusinessRevenue() {
 		result.pop();
 		totalCost += (rate * hours);
 	}
-
 	double netProfit = totalRevenue - totalCost;
 
 
@@ -437,29 +347,21 @@ void Manager::addManager() {
 	cout << "Would you like to:\n";
 	cout << "1) Add new manager\n";
 	cout << "2) Promote employee\n";
-	cin >> input;
+	userChoice = getNumberInRange(1, 2);
 
-	while (stoi(input) > 2 || stoi(input) < 1) {
-		cout << "Please enter valid choice: \n";
-	}
-
-	userChoice = input;
-
-	if (stoi(input) == 1) {
+	if (stoi(userChoice) == 1) {
 		addEmployee(Role::manager);
 	}
 
 	else {
 		cout << "Please enter the employee ID of who you want to promote: ";
-		cin >> input;
+		employeeID = getNumberInRange(0, 10000);
 
-		while (!isValidEmployeeID(input)) {
+		while (!isValidEmployeeID(employeeID)) {
 			cout << "Please enter a valid employee ID: ";
-			cin >> input;
+			employeeID = getNumberInRange(0, 10000);
 		}
 
-		employeeID = input;
-
-		query(0, "update roles set role = 'manager' where userID = '" + employeeID + "'");
+		query(0, "update roles set role = 'manager' where userID = '" + changeApostraphe(employeeID) + "'");
 	}
 }

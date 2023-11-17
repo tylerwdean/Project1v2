@@ -12,9 +12,9 @@ using namespace std;
 
 void User::mainMenu() {
 
-    int userChoice = 0;
+    string userChoice = "0";
 
-    while (userChoice != 4) {
+    while (stoi(userChoice) != 4) {
 
         cout << "Welcome to Publix\n";
         cout << "------------------------------------\n";
@@ -25,35 +25,27 @@ void User::mainMenu() {
         cout << "4) Quit\n";
         cout << "------------------------------------\n";
 
-        cin >> userChoice;
+        userChoice = getNumberInRange(1, 4);
 
-        while (userChoice < 1 || userChoice > 4) {
-            cout << "Please try entering again:\n";
-            cin >> userChoice;
-        }
-
-        if (userChoice == 1) {
+        if (stoi(userChoice) == 1) {
             if (verifyUser()) {
                 logIn();
             }
         }
 
-        else if (userChoice == 2) {
+        else if (stoi(userChoice) == 2) {
             createUser(Role::customer);
             if (verifyUser()) {
                 logIn();
             }
         }
 
-        else if (userChoice == 3) {
+        else if (stoi(userChoice) == 3) {
             changePassword();
         }
 
     }
-
     return;
-
-
 }
 
 
@@ -68,23 +60,22 @@ bool User::verifyUser() {
     while (!isVerified) {
 
         cout << "Username: ";
-        cin >> username;
+        username = getLine();
 
         if (username.compare("quit") == 0)
             return false;
 
         cout << "Password: ";
-        cin >> password;
+        password = getLine();
 
-        //ensures that endered password is clean
         if (!isValidPassword(password) || !isTakenUsername(username)) {
-            cout << "Please enter a valid username\n";
+            cout << "Please enter a valid username or password\n";
             cout << "----------------------------------\n";
             continue;
         }
 
 
-        salter = query(1, "SELECT salter FROM login WHERE username = '" + username + "'").front();
+        salter = query(1, "SELECT salter FROM login WHERE username = '" + changeApostraphe(username) + "'").front();
         hash = hashString(password, salter);
         queue<string> result = query(1, "SELECT userID FROM login WHERE password = '" + hash + "'");
 

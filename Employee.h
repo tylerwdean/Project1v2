@@ -50,7 +50,7 @@ public:
     * 
     *   Prints code out to screen and also adds it to database
     */
-    void generateDiscountCode();
+    void generateDiscountCode(string percentageOff);
 
     /*  Shows the total hours worked and how much has been made
     * 

@@ -12,17 +12,23 @@ using namespace std;
 */
 queue<string> query(int numOfItems, string queryInput);
 
+/*	This function takes two strings and uses them together to create a hash
+*
+*	Returns a unique hash for the two strings
+*/
+string hashString(string hash1, string hash2);
+
+/*	This function generates a random string with uppercase letters, takes length as an integer
+*
+*	Returns the generated string
+*/
+string generateRandomString(int length);
+
 /*	This function sees if the string contains any characters outside of the accepted ones
 * 
 *	Returns true if the string doesn't contain unexpected characters
 */
 bool isClean(string dirtyString);
-
-/*	This function takes two strings and uses them together to create a hash
-* 
-*	Returns a unique hash for the two strings
-*/ 
-string hashString(string hash1, string hash2);
 
 
 /*	This function checks to see if the string contains all the necessary components of a valid password.
@@ -32,11 +38,6 @@ string hashString(string hash1, string hash2);
 */
 bool isValidPassword(string password);
 
-/*	This function generates a random string with uppercase letters, takes length as an integer
-*
-*	Returns the generated string 
-*/
-string generateRandomString(int length);
 
 /*	This checks to see if the entered username exists.
 * 
@@ -80,6 +81,41 @@ bool isValidPhoneNumber(string input);
 */
 bool isTakenEmail(string email);
 
+/*	This function checks if the discount code is taken
+* 
+*	Returns true if taken
+*/
+bool isTakenDiscountCode(string discountCode);
+
 /*  Returns if the string given is a valid employee id
 */
 bool isValidEmployeeID(std::string userID);
+
+
+/*	Reads the latest input and if it's not a valid input, displays message to screen asking for it again. Range is inclusive both ends. 
+* 
+*	Returns the number the user enters within the set range as a string
+*/
+string getNumberInRange(long long low, long long high);
+
+/*	Reads the latest input and if it's not a valid input, displays message to screen asking for it again
+*
+*	Returns the email that the user enteres
+*/
+string getEmail();
+
+/*	Reads the current line the user enters and ensures that it is clean
+* 
+*	Returns the string entered by the user
+*/
+string getLine();
+
+/*	Reads the latest input and sees if its a good double in the range 
+* 
+*	Returns the string with the number
+*/
+string getDoubleInRange(double low, double high);
+
+string getPhoneNumber();
+
+string changeApostraphe(string input);

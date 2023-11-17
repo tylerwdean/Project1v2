@@ -54,7 +54,7 @@ void Employee::mainMenu() {
 			break;
 		case 2: deleteOrder();
 			break;
-		case 3: generateDiscountCode();
+		case 3: generateDiscountCode("15");
 			break;
 		case 4: addHoursWorked();
 			break;
@@ -76,25 +76,14 @@ void Employee::mainMenu() {
 void Employee::addHoursWorked() {
 
 	string input;
-	int hoursWorked;
+	string hoursWorked;
 	bool enteredCorrectly = false;
 
 	cout << "Please enter the number of hours worked today, rounded to nearest integer.\n";
-	cin >> input;
-
-	while (!enteredCorrectly) {
-
-		if (stoi(input) > 9 || stoi(input) < 0)
-			enteredCorrectly = true;
-
-		cout << "Please enter a value in the range of 0-9\n";
-		cin >> input;
-	}
-
-	hoursWorked = stoi(input);
+	hoursWorked = getNumberInRange(0, 9);
 
 	string rate = query(1, "select hourlyRate from employee where employeeID = " + to_string(userID)).front();
-	string queryInput = "insert into hoursWorked values ("+ to_string(this->userID) + ", " + rate + ", " + to_string(hoursWorked) + ")";
+	string queryInput = "insert into hoursWorked values ("+ to_string(this->userID) + ", " + rate + ", " + hoursWorked + ")";
 	query(0, queryInput);
 	
 }
@@ -107,8 +96,6 @@ void Employee::restockItem() {
 
 	cout << "Please enter the product code for the item you're restocking. Type 'quit' to quit\n";
 	cin >> input;
-
-
 
 	while (!enteredCorrectly) {
 
@@ -126,27 +113,9 @@ void Employee::restockItem() {
 	}
 
 	productCode = input;
-	enteredCorrectly = false;
 
 	cout << "Please enter the amount of inventory being restocked.\n.";
-	cin >> input;
-
-	while (stoi(input) < 0) {
-		
-		if (input.compare("quit") == 0)
-			return;
-
-		if (stoi(input) > -1) 
-			enteredCorrectly = true;
-		
-		else {
-			cout << "Please enter a valid value";
-			cin >> input;
-		}
-	}
-
-	quantityRestocked = input;
-	enteredCorrectly = false;
+	quantityRestocked = getNumberInRange(0, 10000);
 
 	string query0 = "update inventory set quantityStocked = quantityStocked + " + 
 		quantityRestocked + "where productID = " + productCode;
@@ -159,46 +128,47 @@ void Employee::restockItem() {
 
 void Employee::deleteOrder() {
 
-	string input;
 	bool enteredCorrectly = false;
-	int orderNumber;
+	string input;
+	string orderNumber;
 
-	cout << "Please enter the order number you want to delete or type 'quit' to quit\n";
-	cin >> input;
+	cout << "Please enter the order number you want to delete or -1 to quit\n";
+	orderNumber = getNumberInRange(-1, 10000);
 
 	while (!enteredCorrectly) {
-		if (input.compare("quit") == 0)
+		if (orderNumber.compare("-1") == 0)
 			return;
-		if (isValidOrder(stoi(input)))
+		if (isValidOrder(stoi(orderNumber)))
 			enteredCorrectly = true;
 		else {
 			cout << "Please enter a valid order ID\n";
-			cin >> input;
+			orderNumber = getNumberInRange(-1, 10000);
 		}
 	}
 
-	orderNumber = stoi(input);
-	enteredCorrectly = false;
-
-	cout << "Are you sure you want to delete order number " + to_string(orderNumber) + "? y/n\n";
+	cout << "Are you sure you want to delete order number " + orderNumber + "? y/n\n";
 	cin >> input;
 
 	if (input.compare("y") == 0) {
-		string query = "delete from orders where orderID = " + to_string(orderNumber);
+		string query = "delete from orders where orderID = " + orderNumber;
 	}
 
 	return;
 }
 
-void Employee::generateDiscountCode() {
+void Employee::generateDiscountCode(string percentageOff) {
 	
 	string input;
 	string code = generateRandomString(8);
-	
-	cout << "Your discount code is: '" + code + "'";
-	cout << "This is good for 15% off.\n";
 
-	string query0 = "insert into discount values (" + to_string(userID) + ", '" + code + "', 15)";
+	while (isTakenDiscountCode(code)) {
+		code = generateRandomString(8);
+	}
+	
+	cout << "Your discount code is: '" + code + "'\n";
+	cout << "This is good for " + percentageOff + "% off.\n";
+
+	string query0 = "insert into discount values (" + to_string(userID) + ", '" + changeApostraphe(code) + "', " + percentageOff + ")";
 	query(0, query0);
 
 	cout << "---------------------------------\n";
@@ -232,28 +202,37 @@ void Employee::viewEarnings() {
 void Employee::updateInformation() {
 
 	string input;
-	string firstName, lastName, phoneNumber;
+	string firstName, lastName, phoneNumber, socialSecurity, hourlyRate;
 
-	cout << "Please enter your first name: ";
-	cin >> input;
+	if (!isValidEmployeeID(to_string(userID))) {
 
-	firstName = input;
+		cout << "Please enter your first name: ";
+		firstName = getLine();
+		cout << "Please enter your last name: ";
+		lastName = getLine();
+		cout << "Please enter your SS number: ";
+		socialSecurity = getLine();
+		cout << "Please enter your hourly rate: ";
+		hourlyRate = getDoubleInRange(0.0, 100.0);
+		cout << "Please enter your phone number: ";
+		phoneNumber = getNumberInRange(1000000000, 9999999999);
 
-	cout << "Please enter your last name: ";
-	cin >> input;
+		query(0, "insert into employee values(" + to_string(userID) + ", " + hourlyRate + ", " + socialSecurity + ", "
+			+ phoneNumber + ", '" + changeApostraphe(firstName) + "', '" + changeApostraphe(lastName) + "')");
 
-	lastName = input;
+		return;
 
-	cout << "Please enter your phone number: ";
-	cin >> input;
-
-	while (!isValidPhoneNumber(input)) {
-		cout << "Please enter valid phone number, digits only: ";
-		cin >> input;
 	}
 
-	phoneNumber = input;
+	cout << "Please enter your first name: ";
+	firstName = getLine();
 
-	string query0 = "update employee set firstName = '" + firstName + "', lastName = '" + lastName + "', phoneNumber = " + phoneNumber;
+	cout << "Please enter your last name: ";
+	lastName = getLine();
+
+	cout << "Please enter your phone number: ";
+	phoneNumber = getNumberInRange(1000000000, 9999999999);
+
+	string query0 = "update employee set firstName = '" + changeApostraphe(firstName) + "', lastName = '" + changeApostraphe(lastName) + "', phoneNumber = " + phoneNumber + " where employeeID = " + to_string(userID);
 	query(0, query0);
 }
