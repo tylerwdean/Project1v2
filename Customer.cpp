@@ -164,8 +164,23 @@ void Customer::searchForProducts() {
             continue;
         }
 
-        result = query(3, "select productName, productPrice, quantityStocked from inventory where productName = '" + changeApostraphe(product) + "'");
+        result = query(3, "select productName, productPrice, quantityStocked, productID from inventory where productName = '" + changeApostraphe(product) + "'");
+
+        cout << "Name: " + result.front();
+        result.pop();
+        cout << "\nPrice: " + result.front();
+        result.pop();
+        cout << "\nQuantity Stocked: " + result.front();
+        cout << "\nEnter quantity wanted or -1 to search again.\n";
+        search = getNumberInRange(-1, stoi(result.front()));
+
+        if (stoi(search) == -1) {
+            cout << "\nPlease enter the name of the product you're looking for. Type 'Done' to stop searching.\n";
+            search = getLine();
+        }
         
+        result.pop();
+        query(0, "insert into cart values (");
     }
 }
 
