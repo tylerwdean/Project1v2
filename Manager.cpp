@@ -354,8 +354,11 @@ void Manager::addManager() {
 	}
 
 	else {
-		cout << "Please enter the employee ID of who you want to promote: ";
+		cout << "Please enter the employee ID of who you want to promote or 0 to quit: ";
 		employeeID = getNumberInRange(0, 10000);
+
+		if (employeeID.compare("0") == 0)
+			return;
 
 		while (!isValidEmployeeID(employeeID)) {
 			cout << "Please enter a valid employee ID: ";

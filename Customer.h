@@ -14,7 +14,7 @@ protected:
     void checkOrderHistory();
 
     //shows the rewards balance
-    //void checkPointsBalance();
+    void checkPointsBalance();
     
     //shows and lets choose to update contact information
     void updateInformation();
@@ -24,4 +24,12 @@ protected:
 
     //views whats in the cart and subtotal
     void viewCart();
+
+    void addToCart(string productID, int quantity);
+
+    void displayItem(string productID);
+
+    void displayOrder(string orderID);
+
+    void checkOut();
 };

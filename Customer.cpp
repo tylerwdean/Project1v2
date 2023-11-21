@@ -1,6 +1,7 @@
 #include <string>
 #include "Util.h"
 #include "Customer.h"
+#include "StringNode.h"
 
 //initializes the user and updates the first name for menu purposes
 Customer::Customer(int userID) {
@@ -48,7 +49,7 @@ void Customer::mainMenu() {
             break;
         case 2: viewCart();
             break;
-        case 3: //checkPointsBalance();
+        case 3: checkPointsBalance();
             break;
         case 4: updateInformation();
             break;
@@ -67,15 +68,134 @@ void Customer::mainMenu() {
 
 }
 
+//prints the current balance of points
+void Customer::checkPointsBalance() {
+
+    queue<string> result = query(1, "select points from customer where customerID = " + to_string(userID));
+
+    cout << "Your current point balance is " + result.front() << " points.\n";
+
+    return;
+}
+
+//shows the customer their current cart
 void Customer::viewCart() {
 
     queue<string> result;
     result = query(2, "select productID, quantity from cart where customerID = " + to_string(this->userID));
+    string input;
+    double subTotal = 0.0;
+    string itemName, itemCost, quantity;
+
+    cout << "\n-------------------------------------\n";
+    printf("%-20s|%7s|%s", "Product Name", "Price", "Quantity");
+    cout << "\n-------------------------------------\n";
 
     for (int i = 1; !result.empty(); i++) {
-        cout << "";
+
+        queue<string> item = query(2, "select productName, price from inventory where productID = " + result.front());
+        result.pop();
+
+        itemName = item.front();
+        item.pop();
+
+        itemCost = item.front();
+        item.pop();
+
+        quantity = result.front();
+        result.pop();
+
+        subTotal += (stod(itemCost) * stoi(quantity));
+
+        printf("%-20s|%7s|%s\n", itemName.c_str(), itemCost.c_str(), quantity.c_str());
     }
 
+    cout << "--------------------------------------\n";
+    cout << "Subtotal: ";
+    printf("%.2f\n", subTotal);
+    cout << "--------------------------------------\n";
+    cout << "Enter 1 to exit, 2 to check out\n";
+    input = getNumberInRange(1, 2);
+
+    if (stoi(input) == 2) {
+        checkOut();
+    }
+}
+
+//turns the customer's cart into an order, probably could be functionalized but whatever
+void Customer::checkOut() {
+
+    queue<string> result = query(2, "select productID, quantity from cart where customerID = " + to_string(this->userID));
+    double totalCost = 0.0;
+    string productID, quantity;
+    string discountCode;
+
+    query(0, "insert into orderHistory values(" + to_string(userID) + ", NULL, 'unfinished')");
+    string orderID = query(1, "select orderID from orderHistory where customerID = " + to_string(userID)
+        + " and discountCode = 'unfinished'").front();
+
+    //adds each item from cart into the order and removes it from the cart
+    while (!result.empty()) {
+
+        productID = result.front();
+        result.pop();
+        quantity = result.front();
+        result.pop();
+
+        queue<string> price = query(2, "select price from inventory where productID = " + productID);
+        query(0, "insert into orders values ('" + orderID + "', " + productID + ", " + quantity + ")");
+        totalCost += stod(price.front()) * stoi(quantity);
+
+        query(0, "delete from cart where productID = " + productID + " and customerID = " + to_string(userID));
+    }
+
+    discountCode = getDiscountCode();
+
+    //gets their points and asks how many they want to use, updates their points based on that too
+    string points = query(1, "select points from customer where customerID = " + to_string(userID)).front();
+    cout << "You have " + points + " points. How many do you want to use?\n";
+
+    //calculates the max amount of points able to be used and sets input range from that
+    int maxPoints = (int)(totalCost * 10);
+
+    string pointsUsed = "";
+
+    if (stoi(points) > maxPoints) {
+        pointsUsed = getNumberInRange(0, maxPoints);
+    }
+
+    else {
+        pointsUsed = getNumberInRange(0, stoi(points));
+    }
+
+    query(0, "update customer set points -= " + pointsUsed + " where customerID = " + to_string(userID));
+
+    //reducts the overall cost by the points
+    totalCost = totalCost - stod(pointsUsed) / 10;
+
+    //calculates and inserts the final price
+    if (discountCode.compare("none") == 0) {
+        query(0, "update orderHistory set totalCost = " + to_string(totalCost) + ", discountCode = NULL" + " where orderID = " + orderID);
+    }
+
+    else {
+
+        totalCost = (100-stod(query(1, "select percentageOff from discount where discountCode = '" + changeApostraphe(discountCode) + "'").front()))/100 * totalCost;
+
+        query(0, "update orderHistory set totalCost = " + to_string(totalCost) + ", discountCode = '" + changeApostraphe(discountCode) + "' where orderID = " + orderID);
+    }
+    
+    //customer is done and checked out
+    cout << "You're checked out! Your total came out to: ";
+    printf("%.2f\n", totalCost);
+    cout << "Your order ID = " << orderID << "\n";
+
+    int addedPoints = (int)totalCost;
+
+    //transaction is done, adds a point per dollar spent
+    query(0, "update customer set points += " + to_string(addedPoints) + " where customerID = " + to_string(userID));
+
+    return;
 }
 
 //update the customer name, email and phone number
@@ -126,91 +246,124 @@ void Customer::updateInformation() {
     this->userFirstName = firstName;
 }
 
-//will check for orders that they have and let them also choose which ones to view and view the basket 
-// (viewing the basket will be a seperate function so the cart function can call it too)
+//will check for orders that they have and let them also choose which ones to view and displays the order
 void Customer::checkOrderHistory() {
     
-    //select orderNumber, totalCost from orderHistory where userID = this->userID;
+    StringNode *head, *cursor;
+    int i = 0;
+
+    queue<string> result = query(2, "select orderID, totalCost from orderHistory where customerID = " + to_string(userID));
+
+    if (result.empty()) {
+        cout << "You don't have any orders\n";
+        return;
+    }
+
+    head = new StringNode();
+    cursor = head;
+
+    for (i = 1; !result.empty(); i++) {
+
+        cursor->data = result.front();
+        cout << i <<") Order Number: " << result.front();
+        result.pop();
+        cout << " Total: " << result.front() << "\n";
+        cursor->next = new StringNode();
+        cursor = cursor->next;
+        result.pop();
+    }
+
+    cout << "What order would you like to look at? Enter -1 to quit\n";
+    string input = getNumberInRange(-1, i);
+
+    if (stoi(input) < 1)
+        return;
+
+    string orderID;
+    cursor = head;
+    //loops through the linked list of orders so they can choose the one they want
+    for (int i = 1; i < stoi(input); i++) {
+        cursor = cursor->next;
+    }
+
+    displayOrder(cursor->data);
+
+    return;
 }
 
-//this will eventually search for products and list them
+//given orderID, displays the items in the order 
+void Customer::displayOrder(string orderID) {
+
+    queue<string> order = query(2, "select productID, quantity from orders where orderID = " + orderID);
+    queue<string> result;
+    string query0;
+
+    cout << "Order #" + orderID << "\n";
+    cout << "-------------------------------\n";
+    while (!order.empty()) {
+        query0 = "select productName from inventory where productID = " + order.front();
+        order.pop();
+        result = query(1, query0);
+        cout << result.front() << ", " << order.front() << "\n";
+        order.pop();
+    }
+
+    cout << "-------------------------------\n";
+    cout << "Total Cost: " + query(1, "select totalCost from orderHistory where orderID = " + orderID).front() << "\n";
+}
+
+//the general search alogrithm
 void Customer::searchForProducts() {
 
     string search;
-    string product;
+    string result;
     bool searching = true;
-    queue<string> result;
-    int i, interestedProduct;
 
-    cout << "\nPlease enter the name of the product you're looking for. Type 'Done' to stop searching.\n";
-    search = getLine();
+    result = searchProducts();
 
-    while (searching) {
+    if (result.compare("done") == 0)
+        return;
 
-        if (search.compare("Done") == 0 || search.compare("done") == 0)
-            return;
+    displayItem(result);
 
-        //main search query
-        result = query(1, "Select productName from inventory where upper(productName) like upper('%" + changeApostraphe(search) + "%')");
+    int stock = stoi(query(1, "select quantityStocked from inventory where productID = " + result).front());
 
-        if (result.empty()) {
-            cout << "No results\n";
-            cout << "----------------------------\n";
-            cout << "\nPlease enter the name of the product you're looking for. Type 'Done' to stop searching.\n";
-            search = getLine();
-            continue;
-        }
-
-        //prints out all the product names that contain the search characters
-
-        for(i = 1; !result.empty(); i++) {
-
-            product = result.front();
-            result.pop();
-            cout << i << ") " + product + "\n";
-            cout << "------------------------------\n";
-        }
-
-        //customer can look at a particular item more or search for new products 
-        cout << "Enter the number for the product you want to look at more,the name of an item you want to search for, or 'done' to stop searching.\n";
-        search = getLine();
-
-        try {
-            interestedProduct = stoi(search);
-
-            //if the number wasn't listed, startes a new search
-            if (interestedProduct > i || interestedProduct < 1) {
-                cout << "Number not in acceptable range. Please enter a product name or 'done' to stop searching\n";
-                search = getLine();
-                continue;
-            }
-        }
-        catch (...) {
-            continue;
-        }
-
-        //displays the particular item selected
-
-        result = query(4, "select productName, price, quantityStocked, productID from inventory where productName = '" + changeApostraphe(product) + "'");
-
-        cout << "Name: " + result.front();
-        result.pop();
-        cout << "\nPrice: " + result.front();
-        result.pop();
-        cout << "\nQuantity Stocked: " + result.front();
-        cout << "\nEnter quantity wanted or -1 to search again.\n";
-        search = getNumberInRange(-1, stoi(result.front()));
-
-        if (stoi(search) == -1) {
-            cout << "\nPlease enter the name of the product you're looking for. Type 'Done' to stop searching.\n";
-            search = getLine();
-        }
+    cout << "\nEnter quantity wanted or -1 to search again.\n";
+    search = getNumberInRange(-1, stock);
         
-        result.pop();
+    if (search.compare("-1") == 0 || search.compare("0") == 0)
+        return;
 
-        //adds item to cart and changes the stock in inventory
-        query(0, "insert into cart values (" + to_string(userID) + ", " + result.front() + ", " + search + ")");
-        query(0, "update inventory set quantityStocked -= " + search + " where productID = " + result.front());
-    }
+    addToCart(result, stoi(search));
+
+    cout << "Successfully added to cart!\n";
 }
 
+//displays the particular item
+void Customer::displayItem(string productID) {
+    
+    queue<string> result = query(4, "select productName, price, quantityStocked, productID from inventory where productID = " + productID);
+    
+    cout << "\nName: " + result.front();
+    result.pop();
+    cout << "\nPrice: " + result.front();
+    result.pop();
+    cout << "\nQuantity Stocked: " + result.front() << "\n";
+}
+
+void Customer::addToCart(string productID, int quantity) {
+
+    if (quantity < 0)
+        return;
+
+    if (!query(1, "select productID from cart where customerID = " + to_string(userID) + " and productID = " + productID).empty()) {
+        
+        query(0, "update cart set quantity += " + to_string(quantity) + " where customerID = " +
+            to_string(userID) + " and productID = " + productID);
+        query(0, "update inventory set quantityStocked -= " + to_string(quantity) + " where productID = " + productID);
+        return;
+    }
+
+    query(0, "insert into cart values (" + to_string(userID) + ", " + productID + ", " + to_string(quantity) + ")");
+    query(0, "update inventory set quantityStocked -= " + to_string(quantity) + " where productID = " + productID);
+}

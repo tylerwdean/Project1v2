@@ -8,6 +8,7 @@
 #include <sql.h>
 #include "Util.h"
 #include <algorithm>
+#include <conio.h>
 
 
 using namespace std;
@@ -148,6 +149,10 @@ bool isValidPassword(string s) {
     bool hasLower = false;
     bool hasNumber = false;
 
+    if (s.length() < 8) {
+        return false;
+    }
+
     for (int i = 0; i < s.length(); i++) {
 
         c = s.at(i);
@@ -180,7 +185,7 @@ bool isValidPassword(string s) {
 
 bool isValidProductCode(string productCode) {
 
-    string query0 = "select productCode from inventory where productCode = " + productCode;
+    string query0 = "select productID from inventory where productID = " + productCode;
 
     queue<string> result = query(1, query0);
 
@@ -221,7 +226,7 @@ bool isTakenEmail(string email) {
         return false;
 
     string query0 = "select emailAddress from customer where emailAddress = '" + changeApostraphe(email) + "'";
-    queue<string> result = query(0, query0);
+    queue<string> result = query(1, query0);
 
     return !result.empty();
 }
@@ -365,7 +370,7 @@ string getDoubleInRange(double low, double high) {
     
     string input;
     bool enteredCorrectly = false;
-    long long number;
+    double number;
 
     input = getLine();
 
@@ -390,4 +395,54 @@ string getDoubleInRange(double low, double high) {
 
     return input;
     
+}
+
+bool isValidDiscountCode(string discountCode) {
+
+    queue<string> result = query(1, "select discountCode from discount where discountCode = '" + changeApostraphe(discountCode) + "'");
+    return !result.empty();
+}
+
+string getDiscountCode() {
+
+    string input;
+
+    cout << "Do you have a discount code? y/n\n";
+    input = getLine();
+
+    if (input.compare("y") != 0)
+        return "none";
+
+    cout << "Please enter the discount code: ";
+    input = getLine();
+
+    while (!isValidDiscountCode(input)) {
+        if (input.compare("none") == 0)
+            return "none";
+        cout << "That's not a valid discount code. Please try again or enter 'none' to continue without one.\n";
+        input = getLine();
+    }
+
+    return input;
+}
+
+string getLineInvisible() {
+
+    string output = "";
+    char ch = _getch();
+
+    while (ch != '\r') {
+        
+        if (ch == 8) {
+            output = output.substr(0, output.length() - 1);
+        }
+        
+        else {
+            output += ch;
+        }
+        ch = _getch();
+
+    }
+
+    return output;
 }

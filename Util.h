@@ -119,3 +119,9 @@ string getDoubleInRange(double low, double high);
 string getPhoneNumber();
 
 string changeApostraphe(string input);
+
+string getDiscountCode();
+
+bool isValidDiscountCode(string discountCode);
+
+string getLineInvisible();

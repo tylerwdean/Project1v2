@@ -138,6 +138,7 @@
     <ClInclude Include="Customer.h" />
     <ClInclude Include="Employee.h" />
     <ClInclude Include="Manager.h" />
+    <ClInclude Include="StringNode.h" />
     <ClInclude Include="User.h" />
     <ClInclude Include="Util.h" />
   </ItemGroup>

@@ -6,6 +6,7 @@
 #include "Customer.h"
 #include "Employee.h"
 #include "Manager.h"
+#include "StringNode.h"
 
 
 using namespace std;
@@ -66,7 +67,7 @@ bool User::verifyUser() {
             return false;
 
         cout << "Password: ";
-        password = getLine();
+        password = getLineInvisible();
 
         if (!isValidPassword(password) || !isTakenUsername(username)) {
             cout << "Please enter a valid username or password\n";
@@ -234,6 +235,71 @@ void User::changePassword() {
     }
 
     return;
+}
+
+string User::searchProducts() {
+
+    string search;
+    bool searching;
+    int interestedProduct = 0, i;
+    queue<string> result;
+    string product;
+    StringNode* head, * cursor;
+    head = new StringNode();
+
+    cout << "\nPlease enter the name of the product you're looking for. Type 'Done' to stop searching.\n";
+    search = getLine();
+
+
+    if (search.compare("Done") == 0 || search.compare("done") == 0)
+        return "done";
+
+    //main search query
+    result = query(1, "Select productName from inventory where upper(productName) like upper('%" + changeApostraphe(search) + "%')");
+
+    if (result.empty()) {
+        cout << "No results\n";
+        return "done";
+    }
+
+    //prints out all the product names that contain the search characters
+
+
+    cursor = head;
+    for (i = 1; !result.empty(); i++) {
+
+        product = result.front();
+        result.pop();
+        cout << i << ") " + product + "\n";
+        cout << "------------------------------\n";
+        cursor->data = product;
+        cursor->next = new StringNode(product);
+        cursor = cursor->next;
+    }
+
+    //customer can look at a particular item more or search for new products 
+    cout << "Enter the number for the product you want to look at more,the name of an item you want to search for, or 'done' to stop searching.\n";
+    search = getLine();
+
+    try {
+        interestedProduct = stoi(search);
+
+        //if the number wasn't listed, startes a new search
+        if (interestedProduct > i || interestedProduct < 1) {
+            cout << "Number not in acceptable range.\n";
+            return "done";
+        }
+    }
+    catch (...) {
+        return "done";
+    }
+
+    cursor = head;
+    for (int i = 1; i < interestedProduct; i++) {
+        cursor = cursor->next;
+    }
+
+    return query(1, "select productID from inventory where productName = '" + changeApostraphe(cursor->data) + "'").front();
 }
 
 void User::changePasswordLoggedIn() {

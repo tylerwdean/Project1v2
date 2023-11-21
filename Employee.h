@@ -63,4 +63,14 @@ public:
     *   Updates preffered name and phone number
     */
     void updateInformation();
+
+    /*  Takes a product ID and displays Employee needed information
+    * 
+    */  
+    void displayItem(string productID);
+
+    /* Lets an employee search for products
+    * 
+    */
+    void searchForProducts();
 };

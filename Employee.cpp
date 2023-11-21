@@ -33,40 +33,38 @@ void Employee::mainMenu() {
 		cout << "Welcome " + this->userFirstName + "!\n";
 		cout << "What would you like to do?\n";
 		cout << "1) Restock Products\n";
-		cout << "2) Delete Customer Order\n";
-		cout << "3) Generate Discount Code\n";
-		cout << "4) Add hours worked\n";
-		cout << "5) See earnings\n";
-		cout << "6) Change password\n";
-		cout << "7) Update personal information\n";
-		cout << "8) View personal information\n";
-		cout << "9) Log out\n";
+		cout << "2) Search Items\n";
+		cout << "3) Delete Customer Order\n";
+		cout << "4) Generate Discount Code\n";
+		cout << "5) Add hours worked\n";
+		cout << "6) See earnings\n";
+		cout << "7) Change password\n";
+		cout << "8) Update personal information\n";
+		cout << "9) View personal information\n";
+		cout << "10) Log out\n";
 		cout << "------------------------------\n";
-		cin >> input;
-
-		while (stoi(input) < 1 || stoi(input) > 9) {
-			cout << "Please enter valid choice\n";
-			cin >> input;
-		}
+		input = getNumberInRange(1, 10);
 
 		switch (stoi(input)) {
 		case 1: restockItem();
 			break;
-		case 2: deleteOrder();
+		case 2: searchForProducts();
 			break;
-		case 3: generateDiscountCode("15");
+		case 3: deleteOrder();
 			break;
-		case 4: addHoursWorked();
+		case 4: generateDiscountCode("15");
 			break;
-		case 5: viewEarnings();
+		case 5: addHoursWorked();
 			break;
-		case 6: changePasswordLoggedIn();
+		case 6: viewEarnings();
 			break;
-		case 7: updateInformation();
+		case 7: changePasswordLoggedIn();
 			break;
-		case 8: User::viewInformation();
+		case 8: updateInformation();
 			break;
-		case 9: return;
+		case 9: User::viewInformation();
+			break;
+		case 10: return;
 		default:
 			break;
 		}
@@ -88,33 +86,31 @@ void Employee::addHoursWorked() {
 	
 }
 
+void Employee::searchForProducts() {
+
+	string search;
+	string result = searchProducts();
+
+	if (result.compare("done") == 0)
+		return;
+
+	displayItem(result);
+
+	cout << "---------------------------\n";
+}
+
 void Employee::restockItem() {
 	
 	string input;
 	string productCode, quantityRestocked;
 	bool enteredCorrectly = false;
 
-	cout << "Please enter the product code for the item you're restocking. Type 'quit' to quit\n";
-	cin >> input;
+	productCode = searchProducts();
 
-	while (!enteredCorrectly) {
+	if (productCode.compare("done") == 0)
+		return;
 
-		if (input.compare("quit") == 0) {
-			return;
-		}
-
-		if (isValidProductCode(input))
-			enteredCorrectly = true;
-
-		else {
-			cout << "Please enter a valid product code.\n";
-			cin >> input;
-		}
-	}
-
-	productCode = input;
-
-	cout << "Please enter the amount of inventory being restocked.\n.";
+	cout << "Please enter the amount of inventory being restocked.\n";
 	quantityRestocked = getNumberInRange(0, 10000);
 
 	string query0 = "update inventory set quantityStocked = quantityStocked + " + 
@@ -124,6 +120,19 @@ void Employee::restockItem() {
 	cout << "Successfully restocked\n";
 	cout << "----------------------------------------\n";
 	return;
+}
+
+void Employee::displayItem(string productID) {
+
+	queue<string> result = query(4, "select productName, price, quantityStocked, productID from inventory where productID = " + productID);
+
+	cout << "\nName: " + result.front();
+	result.pop();
+	cout << "\nProduct ID: " << productID;
+	cout << "\nPrice: " + result.front();
+	result.pop();
+	cout << "\nQuantity Stocked: " + result.front() << "\n";
+
 }
 
 void Employee::deleteOrder() {

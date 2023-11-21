@@ -59,4 +59,6 @@ protected:
     */
     void viewInformation();
 
+    //resturns the product ID of the searched product or done if no results
+    std::string searchProducts();
 };
