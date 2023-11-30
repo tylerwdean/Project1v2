@@ -304,7 +304,6 @@ string getNumberInRange(long long low, long long high) {
         }
 
         cout << "That's not a valid input.\n";
-        cout << input << endl;
         cout << "Enter a value in the range " + to_string(low) + " to " + to_string(high) + ": ";
         input = getLine();
     }
@@ -443,6 +442,8 @@ string getLineInvisible() {
         ch = _getch();
 
     }
+
+    cout << "\n";
 
     return output;
 }

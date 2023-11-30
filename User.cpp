@@ -132,7 +132,7 @@ void User::createUser(Role userRole) {
 
     //verifies the password meets the requirements
     while (true) {
-        cin >> password;
+        password = getLineInvisible();
         if (isValidPassword(password)) {
             break;
         }

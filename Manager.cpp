@@ -309,7 +309,7 @@ void Manager::viewAllEmployees() {
 void Manager::viewBusinessRevenue() {
 	
 	double totalCost = 0.0;
-	queue<string> result = query(1, "select totalCost from orderHistory");
+	queue<string> result = query(1, "select totalCost from orders");
 	double totalRevenue = 0.0;
 
 	while (!result.empty()) {

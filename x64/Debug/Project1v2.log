@@ -1,4 +1,5 @@
-﻿  Util.cpp
-C:\Users\tyler\School Folder\Database\Project1v2\Util.cpp(267,15): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\tyler\School Folder\Database\Project1v2\Util.cpp(268,16): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+﻿  Customer.cpp
+  User.cpp
+C:\Users\tyler\School Folder\Database\Project1v2\User.cpp(243,10): warning C4101: 'searching': unreferenced local variable
+  Generating Code...
   Project1v2.vcxproj -> C:\Users\tyler\School Folder\Database\Project1v2\x64\Debug\Project1v2.exe

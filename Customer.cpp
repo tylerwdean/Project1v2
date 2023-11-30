@@ -130,8 +130,8 @@ void Customer::checkOut() {
     string productID, quantity;
     string discountCode;
 
-    query(0, "insert into orderHistory values(" + to_string(userID) + ", NULL, 'unfinished')");
-    string orderID = query(1, "select orderID from orderHistory where customerID = " + to_string(userID)
+    query(0, "insert into orders values(" + to_string(userID) + ", NULL, 'unfinished')");
+    string orderID = query(1, "select orderID from orders where customerID = " + to_string(userID)
         + " and discountCode = 'unfinished'").front();
 
     //adds each item from cart into the order and removes it from the cart
@@ -143,7 +143,7 @@ void Customer::checkOut() {
         result.pop();
 
         queue<string> price = query(2, "select price from inventory where productID = " + productID);
-        query(0, "insert into orders values ('" + orderID + "', " + productID + ", " + quantity + ")");
+        query(0, "insert into orderItems values ('" + orderID + "', " + productID + ", " + quantity + ")");
         totalCost += stod(price.front()) * stoi(quantity);
 
         query(0, "delete from cart where productID = " + productID + " and customerID = " + to_string(userID));
@@ -175,14 +175,14 @@ void Customer::checkOut() {
 
     //calculates and inserts the final price
     if (discountCode.compare("none") == 0) {
-        query(0, "update orderHistory set totalCost = " + to_string(totalCost) + ", discountCode = NULL" + " where orderID = " + orderID);
+        query(0, "update orders set totalCost = " + to_string(totalCost) + ", discountCode = NULL" + " where orderID = " + orderID);
     }
 
     else {
 
         totalCost = (100-stod(query(1, "select percentageOff from discount where discountCode = '" + changeApostraphe(discountCode) + "'").front()))/100 * totalCost;
 
-        query(0, "update orderHistory set totalCost = " + to_string(totalCost) + ", discountCode = '" + changeApostraphe(discountCode) + "' where orderID = " + orderID);
+        query(0, "update orders set totalCost = " + to_string(totalCost) + ", discountCode = '" + changeApostraphe(discountCode) + "' where orderID = " + orderID);
     }
     
     //customer is done and checked out
@@ -240,7 +240,7 @@ void Customer::updateInformation() {
     //if customer is added, it updates the info
     else {
         query(0, "insert into customer values (" + to_string(userID) + ", '" + changeApostraphe(firstName)
-            + "', '" + changeApostraphe(lastName) + "', '" + changeApostraphe(emailAddress) + "', " + phoneNumber + ")");
+            + "', '" + changeApostraphe(lastName) + "', '" + changeApostraphe(emailAddress) + "', " + phoneNumber + ", 0)");
     }
 
     this->userFirstName = firstName;
@@ -252,7 +252,7 @@ void Customer::checkOrderHistory() {
     StringNode *head, *cursor;
     int i = 0;
 
-    queue<string> result = query(2, "select orderID, totalCost from orderHistory where customerID = " + to_string(userID));
+    queue<string> result = query(2, "select orderID, totalCost from orders where customerID = " + to_string(userID));
 
     if (result.empty()) {
         cout << "You don't have any orders\n";
@@ -294,7 +294,7 @@ void Customer::checkOrderHistory() {
 //given orderID, displays the items in the order 
 void Customer::displayOrder(string orderID) {
 
-    queue<string> order = query(2, "select productID, quantity from orders where orderID = " + orderID);
+    queue<string> order = query(2, "select productID, quantity from orderItems where orderID = " + orderID);
     queue<string> result;
     string query0;
 
@@ -309,7 +309,7 @@ void Customer::displayOrder(string orderID) {
     }
 
     cout << "-------------------------------\n";
-    cout << "Total Cost: " + query(1, "select totalCost from orderHistory where orderID = " + orderID).front() << "\n";
+    cout << "Total Cost: " + query(1, "select totalCost from orders where orderID = " + orderID).front() << "\n";
 }
 
 //the general search alogrithm
@@ -328,7 +328,7 @@ void Customer::searchForProducts() {
 
     int stock = stoi(query(1, "select quantityStocked from inventory where productID = " + result).front());
 
-    cout << "\nEnter quantity wanted or -1 to search again.\n";
+    cout << "\nEnter quantity wanted or -1 to search again. \n";
     search = getNumberInRange(-1, stock);
         
     if (search.compare("-1") == 0 || search.compare("0") == 0)
