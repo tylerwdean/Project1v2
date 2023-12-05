@@ -26,4 +26,6 @@ public:
     void addManager();
 
     void generateDiscountCode();
+
+    void viewLargestOrder();
 };

@@ -37,12 +37,7 @@ void Customer::mainMenu() {
         cout << "6) See order history\n";
         cout << "7) Logout\n";
         cout << "--------------------------------\n";
-        cin >> userChoice;
-
-        while (userChoice > 7 || userChoice < 1) {
-            cout << "Please enter valid number choice: ";
-            cin >> userChoice;
-        }
+        userChoice = stoi(getNumberInRange(1, 7));
         
         switch (userChoice) {
         case 1: searchForProducts();
@@ -59,7 +54,6 @@ void Customer::mainMenu() {
             break;
         case 7:
             return;
-        case 8: return;
         default:
             break;
         }
@@ -291,64 +285,40 @@ void Customer::checkOrderHistory() {
     return;
 }
 
-//given orderID, displays the items in the order 
-void Customer::displayOrder(string orderID) {
-
-    queue<string> order = query(2, "select productID, quantity from orderItems where orderID = " + orderID);
-    queue<string> result;
-    string query0;
-
-    cout << "Order #" + orderID << "\n";
-    cout << "-------------------------------\n";
-    while (!order.empty()) {
-        query0 = "select productName from inventory where productID = " + order.front();
-        order.pop();
-        result = query(1, query0);
-        cout << result.front() << ", " << order.front() << "\n";
-        order.pop();
-    }
-
-    cout << "-------------------------------\n";
-    cout << "Total Cost: " + query(1, "select totalCost from orders where orderID = " + orderID).front() << "\n";
-}
 
 //the general search alogrithm
 void Customer::searchForProducts() {
 
-    string search;
-    string result;
+    string numberWanted;
+    queue<string> result;
+    string productID;
     bool searching = true;
 
-    result = searchProducts();
+    productID = searchProducts();
 
-    if (result.compare("done") == 0)
+    if (productID.compare("done") == 0)
         return;
 
-    displayItem(result);
+    displayItem(productID);
 
-    int stock = stoi(query(1, "select quantityStocked from inventory where productID = " + result).front());
+    result = query(2, "select quantityStocked, maxAllowedPerOrder from inventory where productID = " + productID);
+    int stock = stoi(result.front());
+    result.pop();
+    string maxPerCustomer = result.front();
 
-    cout << "\nEnter quantity wanted or -1 to search again. \n";
-    search = getNumberInRange(-1, stock);
+    cout << "\nHow many do you want? Max allowed per customer is: " + maxPerCustomer + "\n";
+
+    int maxPossible = stock;
+
+    if (maxPossible > stoi(maxPerCustomer))
+        maxPossible = stoi(maxPerCustomer);
+
+    numberWanted = getNumberInRange(-1, stock);
         
-    if (search.compare("-1") == 0 || search.compare("0") == 0)
+    if (numberWanted.compare("-1") == 0 || numberWanted.compare("0") == 0)
         return;
 
-    addToCart(result, stoi(search));
-
-    cout << "Successfully added to cart!\n";
-}
-
-//displays the particular item
-void Customer::displayItem(string productID) {
-    
-    queue<string> result = query(4, "select productName, price, quantityStocked, productID from inventory where productID = " + productID);
-    
-    cout << "\nName: " + result.front();
-    result.pop();
-    cout << "\nPrice: " + result.front();
-    result.pop();
-    cout << "\nQuantity Stocked: " + result.front() << "\n";
+    addToCart(productID, stoi(numberWanted));
 }
 
 void Customer::addToCart(string productID, int quantity) {
@@ -358,6 +328,14 @@ void Customer::addToCart(string productID, int quantity) {
 
     if (!query(1, "select productID from cart where customerID = " + to_string(userID) + " and productID = " + productID).empty()) {
         
+        string currentQuantity = query(1, "select quantity from cart where productID = " + productID + " and customerID = " + to_string(userID)).front();
+        string maxAllowedPerOrder = query(1, "select maxAllowedPerOrder from inventory where productID = " + productID).front();
+
+        if (quantity + stoi(currentQuantity) > stoi(maxAllowedPerOrder)) {
+            cout << "The number in your cart exceeds the maximum allowed per order!\n";
+            return;
+        }
+        
         query(0, "update cart set quantity += " + to_string(quantity) + " where customerID = " +
             to_string(userID) + " and productID = " + productID);
         query(0, "update inventory set quantityStocked -= " + to_string(quantity) + " where productID = " + productID);
@@ -366,4 +344,6 @@ void Customer::addToCart(string productID, int quantity) {
 
     query(0, "insert into cart values (" + to_string(userID) + ", " + productID + ", " + to_string(quantity) + ")");
     query(0, "update inventory set quantityStocked -= " + to_string(quantity) + " where productID = " + productID);
+
+    cout << "Successfully added to cart!\n";
 }

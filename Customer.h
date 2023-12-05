@@ -27,9 +27,5 @@ protected:
 
     void addToCart(string productID, int quantity);
 
-    void displayItem(string productID);
-
-    void displayOrder(string orderID);
-
     void checkOut();
 };

@@ -125,3 +125,7 @@ string getDiscountCode();
 bool isValidDiscountCode(string discountCode);
 
 string getLineInvisible();
+
+void displayOrder(string orderID);
+
+void displayItem(string productID);

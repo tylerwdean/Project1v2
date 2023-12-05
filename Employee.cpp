@@ -28,7 +28,7 @@ void Employee::mainMenu() {
 
 	string input = "0";
 
-	while (stoi(input) != 9) {
+	while (stoi(input) != 10) {
 
 		cout << "Welcome " + this->userFirstName + "!\n";
 		cout << "What would you like to do?\n";
@@ -62,7 +62,7 @@ void Employee::mainMenu() {
 			break;
 		case 8: updateInformation();
 			break;
-		case 9: User::viewInformation();
+		case 9: viewInformation();
 			break;
 		case 10: return;
 		default:
@@ -156,7 +156,7 @@ void Employee::deleteOrder() {
 	}
 
 	cout << "Are you sure you want to delete order number " + orderNumber + "? y/n\n";
-	cin >> input;
+	input = getLine();
 
 	if (input.compare("y") == 0) {
 		string query = "delete from orders where orderID = " + orderNumber;

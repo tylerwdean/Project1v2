@@ -447,3 +447,36 @@ string getLineInvisible() {
 
     return output;
 }
+
+void displayOrder(string orderID) {
+
+    queue<string> order = query(2, "select productID, quantity from orderItems where orderID = " + orderID);
+    queue<string> result;
+    string query0;
+
+    cout << "Order #" + orderID << "\n";
+    cout << "-------------------------------\n";
+    while (!order.empty()) {
+        query0 = "select productName from inventory where productID = " + order.front();
+        order.pop();
+        result = query(1, query0);
+        cout << result.front() << ", " << order.front() << "\n";
+        order.pop();
+    }
+
+    cout << "-------------------------------\n";
+    cout << "Total Cost: " + query(1, "select totalCost from orders where orderID = " + orderID).front() << "\n";
+
+}
+
+//displays the particular item
+void displayItem(string productID) {
+
+    queue<string> result = query(4, "select productName, price, quantityStocked, productID from inventory where productID = " + productID);
+
+    cout << "\nName: " + result.front();
+    result.pop();
+    cout << "\nPrice: " + result.front();
+    result.pop();
+    cout << "\nQuantity Stocked: " + result.front() << "\n";
+}

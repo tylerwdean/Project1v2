@@ -111,7 +111,7 @@ void User::createUser(Role userRole) {
 
     //verifies the username to ensure it's clean and not taken
     while (true) {
-        cin >> username;
+        username = getLine();
 
         if (!isClean(username)) {
             cout << "Don't try to break my code lmao, try again" << endl;
@@ -184,26 +184,10 @@ void User::changePassword() {
     queue<string> result;
 
     cout << "Please enter the email address you use: ";
-    cin >> input; 
-
-    while (!isValidEmail(input)) {
-
-        if (input.compare("quit") == 0)
-            return;
-
-        cout << "Please enter valid email address: ";
-        cin >> input;
-    }
-
-    email = input;
+    email = getEmail();
 
     cout << "Please enter the phone number you use: ";
-    cin >> input;
-
-    while (!isValidPhoneNumber(input)) {
-        cout << "Please enter valid phone number, digits only: ";
-        cin >> input;
-    }
+    input = getPhoneNumber();
 
     phoneNumber = stoll(input);
 
@@ -216,12 +200,12 @@ void User::changePassword() {
         string salter = query(1, "select salter from login where userID = " + userID).front();
 
         cout << "New Password: ";
-        cin >> input;
+        input = getLineInvisible();
 
         while (!isValidPassword(input)) {
             cout << "Please enter a password with 8 characters, a number, uppercase letter and lowercase letter.\n";
             cout << "New Password: ";
-            cin >> input;
+            input = getLineInvisible();
         }
 
         string newPassword = hashString(input, salter);
@@ -306,12 +290,12 @@ void User::changePasswordLoggedIn() {
 
     string input;
     cout << "Please enter the new password: ";
-    cin >> input;
+    input = getLineInvisible();
 
     while (!isValidPassword(input)) {
         cout << "Please enter a password 8 characters long, with an uppercase letter, lowercase letter and a number.\n";
         cout << "New password: ";
-        cin >> input;
+        input = getLineInvisible();
     }
 
     string newPassword = input;

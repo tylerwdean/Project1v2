@@ -1,5 +1,2 @@
 ﻿  Customer.cpp
-  User.cpp
-C:\Users\tyler\School Folder\Database\Project1v2\User.cpp(243,10): warning C4101: 'searching': unreferenced local variable
-  Generating Code...
   Project1v2.vcxproj -> C:\Users\tyler\School Folder\Database\Project1v2\x64\Debug\Project1v2.exe

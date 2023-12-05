@@ -27,7 +27,7 @@ void Manager::mainMenu() {
 	
 	string userChoice = "0";
 
-	while (stoi(userChoice) != 12) {
+	while (stoi(userChoice) != 13) {
 		cout << "\nHello " + this->userFirstName + "!\n";
 		cout << "What would you like to do?\n";
 		cout << "1) Add new Employee\n";
@@ -41,9 +41,10 @@ void Manager::mainMenu() {
 		cout << "9) See Business Revenue\n";
 		cout << "10) Change password\n";
 		cout << "11) Update Information\n";
-		cout << "12) Log out\n";
+		cout << "12) View Largest Order\n";
+		cout << "13) Log out\n";
 		cout << "---------------------------------\n";
-		userChoice = getNumberInRange(1, 12);
+		userChoice = getNumberInRange(1, 13);
 
 		switch (stoi(userChoice)) {
 		case 1: addEmployee(Role::employee);
@@ -68,13 +69,37 @@ void Manager::mainMenu() {
 			break;
 		case 11: updateInformation();
 			break;
-		case 12: return;
+		case 12: viewLargestOrder();
+			break;
+		case 13: return;
 		default:
 			break;
 		}
 	}
 
 	return;
+}
+
+void Manager::viewLargestOrder() {
+
+	cout << "\n";
+	queue<string> result = query(2, "select orderID, customerID from orders where totalCost = (select max(totalCost) from orders)");
+
+	if (result.empty())
+		return;
+
+	string orderID = result.front();
+	result.pop();
+	string customerID = result.front();
+
+	displayOrder(orderID);
+
+	result = query(2, "select firstName, lastName from customer where customerID = " + customerID);
+	string customerName = result.front();
+	result.pop();
+	customerName += " " + result.front();
+
+	cout << "\nAnd the person who placed that order is... " + customerName + "!!\n\n\n";
 }
 
 void Manager::generateDiscountCode() {
@@ -122,7 +147,7 @@ void Manager::addEmployee(Role newRole) {
 
 
 	cout << "Please enter the desired password\n";
-	newPassword = getLine();
+	newPassword = getLineInvisible();
 
 	while (!isValidPassword(newPassword)) {
 		cout << "Please enter a password with 8 characters, an uppercase letter, a lowercase letter and a number\n";
@@ -150,8 +175,6 @@ void Manager::addEmployee(Role newRole) {
 	}
 
 	query(0, "insert into roles values (" + employeeUserID + ", '" + role + "')");
-
-	query(0, "insert into hiringManager values (" + employeeUserID + ", " + to_string(userID) + ")");
 
 	cout << "Employee added successfully\n";
 	cout << "-------------------------------------------\n";
@@ -181,7 +204,7 @@ void Manager::fireEmployee() {
 	cout << "Are you sure you want to fire " + result.front() + " ";
 	result.pop();
 	cout << result.front() << "? y/n: ";
-	cin >> input;
+	input = getLine();
 
 	if (input.compare("y") == 0) {
 		string query0 = "delete from login where userID = " + employeeID;
@@ -204,6 +227,7 @@ void Manager::createItem() {
 	string productName;
 	string productPrice;
 	string startingQuantity;
+	string maxPerCustomer;
 	bool enteredCorrectly = false;
 
 	cout << "Please enter the name of the product you want to add. Type 'quit' to quit. Type '_' instead of spaces.\n";
@@ -216,7 +240,7 @@ void Manager::createItem() {
 			return;
 
 		cout << "You entered: '" + productName + "'. Is that what you want to keep it as? y/n\n";
-		cin >> input;
+		input = getLine();
 
 		if (input.compare("y") == 0)
 			enteredCorrectly = true;
@@ -236,8 +260,12 @@ void Manager::createItem() {
 	cout << "How many of these items do you want to stock initially?\n";
 	startingQuantity = getNumberInRange(0, 10000);
 
+	cout << "How many items can someone get at a time?\n";
+	maxPerCustomer = getNumberInRange(0, 1000);
+
 	string query0 = "insert into inventory values('" + changeApostraphe(productName) + "', " + productPrice +
-		", " + startingQuantity + ")";
+		", " + startingQuantity + ", " + maxPerCustomer + ")";
+
 	query(0, query0);
 	cout << "Product successfully added\n";
 	cout << "------------------------------\n\n";
