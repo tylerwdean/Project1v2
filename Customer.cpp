@@ -301,20 +301,31 @@ void Customer::searchForProducts() {
 
     displayItem(productID);
 
-    result = query(2, "select quantityStocked, maxAllowedPerOrder from inventory where productID = " + productID);
-    int stock = stoi(result.front());
-    result.pop();
-    string maxPerCustomer = result.front();
+    while (true) {
 
-    cout << "\nHow many do you want? Max allowed per customer is: " + maxPerCustomer + "\n";
+        result = query(2, "select quantityStocked, maxAllowedPerOrder from inventory where productID = " + productID);
+        int stock = stoi(result.front());
+        result.pop();
+        string maxPerCustomer = result.front();
 
-    int maxPossible = stock;
+        cout << "\nHow many do you want? Max allowed per customer is: " + maxPerCustomer + "\n";
 
-    if (maxPossible > stoi(maxPerCustomer))
-        maxPossible = stoi(maxPerCustomer);
+        int maxPossible = stock;
 
-    numberWanted = getNumberInRange(-1, stock);
-        
+        if (maxPossible > stoi(maxPerCustomer))
+            maxPossible = stoi(maxPerCustomer);
+
+        numberWanted = getNumberInRange(-1, maxPossible);
+
+        string stillInStock = query(1, "select quantityStocked from inventory where productID = " + productID).front();
+
+        if (stoi(stillInStock) < stoi(numberWanted))
+            cout << "Inventory no longer allows you to buy that many items, quantity available is: " + stillInStock + "\n";
+
+        else
+            break;
+    }
+
     if (numberWanted.compare("-1") == 0 || numberWanted.compare("0") == 0)
         return;
 
